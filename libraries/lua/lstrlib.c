@@ -823,6 +823,90 @@ static int str_format (lua_State *L) {
   return 1;
 }
 
+static int str_index(lua_State* L)
+{
+  size_t l;
+  const char* s = luaL_checklstring(L, 1, &l);
+  int i = luaL_checkinteger(L, 2);
+  int posi = posrelat(i - 1, l);
+  
+  if (posi < 0 || (size_t)posi > l)
+      return NULL; /* empty interval; return no values */
+
+  lua_pushlstring(L, &s[posi], 1);
+  
+  return 1;
+}
+
+static int str_trim(lua_State* L)
+{
+  lua_settop(L, 1);
+  lua_pushliteral(L, "^%s*(.-)%s*$");
+  return str_find_aux(L, 0);
+}
+
+static int str_trimstart(lua_State* L)
+{
+  lua_settop(L, 1);
+  lua_pushliteral(L, "^%s*(.+)");
+  return str_find_aux(L, 0);
+}
+
+static int str_trimend(lua_State* L)
+{
+  lua_settop(L, 1);
+  lua_pushliteral(L, "(.-)%s*$");
+  return str_find_aux(L, 0);
+}
+
+static int str_split(lua_State* L)
+{
+  size_t haystackLen;
+  const char* haystack = luaL_checklstring(L, 1, &haystackLen);
+  size_t needleLen;
+  const char* needle = luaL_optlstring(L, 2, ",", &needleLen);
+
+  const char* begin = haystack;
+  const char* end = haystack + haystackLen;
+  const char* spanStart = begin;
+  int numMatches = 0;
+
+  lua_createtable(L, 0, 0);
+
+  if (needleLen == 0)
+      begin++;
+
+  // Don't iterate the last needleLen - 1 bytes of the string - they are
+  // impossible to be splits and would let us memcmp past the end of the
+  // buffer.
+  for (const char* iter = begin; iter <= end - needleLen; iter++)
+  {
+      // Use of memcmp here instead of strncmp is so that we allow embedded
+      // nulls to be used in either of the haystack or the needle strings.
+      // Most Lua string APIs allow embedded nulls, and this should be no
+      // exception.
+      if (memcmp(iter, needle, needleLen) == 0)
+      {
+        lua_pushinteger(L, ++numMatches);
+        lua_pushlstring(L, spanStart, iter - spanStart);
+        lua_settable(L, -3);
+
+        spanStart = iter + needleLen;
+        if (needleLen > 0)
+          iter += needleLen - 1;
+      }
+  }
+
+  if (needleLen > 0)
+  {
+      lua_pushinteger(L, ++numMatches);
+      lua_pushlstring(L, spanStart, end - spanStart);
+      lua_settable(L, -3);
+  }
+
+  return 1;
+}
+
 
 static const luaL_Reg strlib[] = {
   {"byte", str_byte},
@@ -833,6 +917,7 @@ static const luaL_Reg strlib[] = {
   {"gfind", gfind_nodef},
   {"gmatch", gmatch},
   {"gsub", str_gsub},
+  {"index", str_index},
   {"len", str_len},
   {"lower", str_lower},
   {"match", str_match},
@@ -840,6 +925,10 @@ static const luaL_Reg strlib[] = {
   {"reverse", str_reverse},
   {"sub", str_sub},
   {"upper", str_upper},
+  {"split", str_split},
+  {"trim", str_trim},
+  {"trimstart", str_trimstart},
+  {"trimend", str_trimend},
   {NULL, NULL}
 };
 
