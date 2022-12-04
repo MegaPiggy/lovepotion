@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define lapi_c
 #define LUA_CORE
@@ -601,6 +602,43 @@ LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
   lua_unlock(L);
 }
 
+static TValue* index2addr(lua_State* L, int idx)
+{
+    if (idx > 0)
+    {
+        TValue* o = L->base + (idx - 1);
+        api_check(L, idx <= L->ci->top - L->base);
+        if (o >= L->top)
+            return cast_to(TValue*, luaO_nilobject);
+        else
+            return o;
+    }
+    else if (idx > LUA_REGISTRYINDEX)
+    {
+        api_check(L, idx != 0 && -idx <= L->top - L->base);
+        return L->top + idx;
+    }
+}
+
+void lua_setreadonly(lua_State* L, int objindex, int enabled)
+{
+    const TValue* o = index2addr(L, objindex);
+    api_check(L, ttistable(o));
+    Table* t = hvalue(o);
+    api_check(L, t != hvalue(registry(L)));
+    t->readonly = (bool)enabled;
+    return;
+}
+
+int lua_getreadonly(lua_State* L, int objindex)
+{
+    const TValue* o = index2addr(L, objindex);
+    api_check(L, ttistable(o));
+    Table* t = hvalue(o);
+    int res = t->readonly;
+    return res;
+}
+
 
 LUA_API int lua_getmetatable (lua_State *L, int objindex) {
   const TValue *obj;
@@ -692,6 +730,8 @@ LUA_API void lua_rawset (lua_State *L, int idx) {
   api_checknelems(L, 2);
   t = index2adr(L, idx);
   api_check(L, ttistable(t));
+  if (hvalue(t)->readonly)
+    luaG_runerror(L, "Attempt to modify a readonly table");
   setobj2t(L, luaH_set(L, hvalue(t), L->top-2), L->top-1);
   luaC_barriert(L, hvalue(t), L->top-1);
   L->top -= 2;
@@ -705,6 +745,8 @@ LUA_API void lua_rawseti (lua_State *L, int idx, int n) {
   api_checknelems(L, 1);
   o = index2adr(L, idx);
   api_check(L, ttistable(o));
+  if (hvalue(o)->readonly)
+    luaG_runerror(L, "Attempt to modify a readonly table");
   setobj2t(L, luaH_setnum(L, hvalue(o), n), L->top-1);
   luaC_barriert(L, hvalue(o), L->top-1);
   L->top--;
@@ -727,6 +769,8 @@ LUA_API int lua_setmetatable (lua_State *L, int objindex) {
   }
   switch (ttype(obj)) {
     case LUA_TTABLE: {
+      if (hvalue(obj)->readonly)
+        luaG_runerror(L, "Attempt to modify a readonly table");
       hvalue(obj)->metatable = mt;
       if (mt)
         luaC_objbarriert(L, hvalue(obj), mt);

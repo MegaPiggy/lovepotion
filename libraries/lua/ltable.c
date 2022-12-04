@@ -364,6 +364,7 @@ Table *luaH_new (lua_State *L, int narray, int nhash) {
   t->array = NULL;
   t->sizearray = 0;
   t->lsizenode = 0;
+  t->readonly = 0;
   t->node = cast(Node *, dummynode);
   setarrayvector(L, t, narray);
   setnodevector(L, t, nhash);
@@ -574,6 +575,30 @@ int luaH_getn (Table *t) {
     return j;  /* that is easy... */
   else return unbound_search(t, j);
 }
+
+void luaH_clear(Table* tt)
+{
+    /* clear array part */
+    for (int i = 0; i < tt->sizearray; ++i)
+    {
+        setnilvalue(&tt->array[i]);
+    }
+
+    /* clear hash part */
+    if (tt->node != dummynode)
+    {
+        int size = sizenode(tt);
+        tt->lastfree = gnode(tt, size);  
+        for (int i = 0; i < size; ++i)
+        {
+            Node* n = gnode(tt, i);
+            setnilvalue(gkey(n));
+            setnilvalue(gval(n));
+            gnext(n) = NULL;
+        }
+    }
+}
+
 
 
 
