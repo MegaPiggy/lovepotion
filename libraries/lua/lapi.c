@@ -333,6 +333,24 @@ LUA_API lua_Integer lua_tointeger (lua_State *L, int idx) {
     return 0;
 }
 
+LUA_API lua_Integer lua_tointegerx (lua_State *L, int idx, int* isnum) {
+  TValue n;
+  const TValue *o = index2adr(L, idx);
+  if (tonumber(o, &n)) {
+    lua_Integer res;
+    lua_Number num = nvalue(o);
+    lua_number2integer(res, num);
+    if (isnum)
+      *isnum = 1;
+    return res;
+  }
+  else {
+    if (isnum)
+      *isnum = 0;
+    return 0;
+  }
+}
+
 
 LUA_API int lua_toboolean (lua_State *L, int idx) {
   const TValue *o = index2adr(L, idx);
