@@ -443,6 +443,17 @@ static int luaB_newproxy (lua_State *L) {
   return 1;
 }
 
+static int luaB_wait(lua_State* L)
+{
+    double seconds = luaL_checknumber(L, 1);
+    if (seconds <= 0)
+        luaL_argerror(L, 1, "must be above zero");
+
+    sleep(seconds);
+
+    return 0;
+}
+
 
 static const luaL_Reg base_funcs[] = {
   {"assert", luaB_assert},
@@ -468,6 +479,7 @@ static const luaL_Reg base_funcs[] = {
   {"tostring", luaB_tostring},
   {"type", luaB_type},
   {"unpack", luaB_unpack},
+  {"wait", luaB_wait},
   {"xpcall", luaB_xpcall},
   {NULL, NULL}
 };
