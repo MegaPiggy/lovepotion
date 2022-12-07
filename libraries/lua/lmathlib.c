@@ -760,6 +760,20 @@ static int math_quadratic(lua_State* L)
   return 1;
 }
 
+static int math_iseven(lua_State* L)
+{
+  int n = luaL_checkinteger(L, 1);
+  lua_pushboolean(L, n%2 == 0);
+  return 1;
+}
+
+static int math_isodd(lua_State* L)
+{
+  int n = luaL_checkinteger(L, 1);
+  lua_pushboolean(L, n%2 != 0);
+  return 1;
+}
+
 
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
@@ -796,10 +810,12 @@ static const luaL_Reg mathlib[] = {
   {"grad", math_grad},
   {"hypot", math_hypot},
   {"ilogb", math_ilogb},
+  {"iseven", math_iseven},
   {"isinf", math_isinf},
   {"isfinite", math_isfinite},
   {"isnormal", math_isnormal},
   {"isnan", math_isnan},
+  {"isodd", math_isodd},
   {"isunordered", math_isunordered},
   {"ldexp", math_ldexp},
   {"lerp", math_lerp},
