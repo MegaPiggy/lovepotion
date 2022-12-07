@@ -1342,8 +1342,9 @@ int Wrap_Graphics::Get3D(lua_State* L)
     lua_pushboolean(L, instance->Get3D());
 
     return 1;
-#endif
+#else
     return 0;
+#endif
 }
 
 int Wrap_Graphics::Set3D(lua_State* L)
@@ -1366,8 +1367,9 @@ int Wrap_Graphics::Get3DDepth(lua_State* L)
     lua_pushnumber(L, sliderValue);
 
     return 1;
-#endif
+#else
     return 0;
+#endif
 }
 
 int Wrap_Graphics::SetWide(lua_State* L)
@@ -1390,8 +1392,9 @@ int Wrap_Graphics::GetWide(lua_State* L)
     Luax::PushBoolean(L, enabled);
 
     return 1;
-#endif
+#else
     return 0;
+#endif
 }
 
 /* End Nintendo 3DS */
