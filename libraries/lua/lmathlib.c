@@ -774,6 +774,20 @@ static int math_isodd(lua_State* L)
   return 1;
 }
 
+unsigned bin(unsigned n)
+{
+    if (n > 1)
+      return bin(n / 2);
+    return n % 2;
+}
+
+static int math_bin(lua_State* L)
+{
+  int n = luaL_checkinteger(L, 1);
+  lua_pushinteger(L, bin(n));
+  return 1;
+}
+
 
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
@@ -782,6 +796,7 @@ static const luaL_Reg mathlib[] = {
   {"atan2", math_atan2},
   {"atan",  math_atan},
   {"approximately", math_approximately},
+  {"bin",  math_bin},
   {"cbrt",  math_cbrt},
   {"ceil",  math_ceil},
   {"classify", math_classify},
