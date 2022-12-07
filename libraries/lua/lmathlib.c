@@ -735,6 +735,31 @@ static int math_fuzzyLe(lua_State* L)
   return 1;
 }
 
+static int math_quadratic(lua_State* L)
+{
+  // Coefficients of the quadratic equation
+  double a = luaL_checknumber(L, 1);
+  double b = luaL_checknumber(L, 2);
+  double c = luaL_checknumber(L, 3);
+
+  // Compute the roots of the quadratic equation
+  double discriminant = (b * b) - (4 * a * c);
+
+  // Check if the equation has real roots
+  if (discriminant > 0) {
+    // If the discriminant is positive, the equation has two real roots
+    lua_pushnumber(L, (-b + sqrt(discriminant)) / (2 * a));
+    lua_pushnumber(L, (-b - sqrt(discriminant)) / (2 * a));
+    return 2;
+  } else if (discriminant == 0) {
+    // If the discriminant is zero, the equation has one real root
+    lua_pushnumber(L, -b / (2 * a));
+  } else {
+    lua_pushnil(L);
+  }
+  return 1;
+}
+
 
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
@@ -791,6 +816,7 @@ static const luaL_Reg mathlib[] = {
   {"nextafter", math_nextafter},
   {"nexttoward", math_nextforward},
   {"pow",   math_pow},
+  {"quadratic", math_quadratic},
   {"rad",   math_rad},
   {"random",     math_random},
   {"randomseed", math_randomseed},
