@@ -124,6 +124,7 @@ static void PrintCode(const Proto* f)
    case OP_SUB:
    case OP_MUL:
    case OP_DIV:
+   case OP_IDIV:
    case OP_POW:
    case OP_EQ:
    case OP_LT:

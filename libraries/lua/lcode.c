@@ -636,6 +636,9 @@ static int constfolding (OpCode op, expdesc *e1, expdesc *e2) {
     case OP_DIV:
       if (v2 == 0) return 0;  /* do not attempt to divide by 0 */
       r = luai_numdiv(v1, v2); break;
+    case OP_IDIV:
+      if (v2 == 0) return 0;  /* do not attempt to divide by 0 */
+      r = luai_numidiv(v1, v2); break;
     case OP_MOD:
       if (v2 == 0) return 0;  /* do not attempt to divide by 0 */
       r = luai_nummod(v1, v2); break;
@@ -721,7 +724,7 @@ void luaK_infix (FuncState *fs, BinOpr op, expdesc *v) {
       luaK_exp2nextreg(fs, v);  /* operand must be on the `stack' */
       break;
     }
-    case OPR_ADD: case OPR_SUB: case OPR_MUL: case OPR_DIV:
+    case OPR_ADD: case OPR_SUB: case OPR_MUL: case OPR_DIV: case OPR_IDIV:
     case OPR_MOD: case OPR_POW: {
       if (!isnumeral(v)) luaK_exp2RK(fs, v);
       break;
@@ -768,6 +771,7 @@ void luaK_posfix (FuncState *fs, BinOpr op, expdesc *e1, expdesc *e2) {
     case OPR_SUB: codearith(fs, OP_SUB, e1, e2); break;
     case OPR_MUL: codearith(fs, OP_MUL, e1, e2); break;
     case OPR_DIV: codearith(fs, OP_DIV, e1, e2); break;
+    case OPR_IDIV: codearith(fs, OP_IDIV, e1, e2); break;
     case OPR_MOD: codearith(fs, OP_MOD, e1, e2); break;
     case OPR_POW: codearith(fs, OP_POW, e1, e2); break;
     case OPR_EQ: codecomp(fs, OP_EQ, 1, e1, e2); break;

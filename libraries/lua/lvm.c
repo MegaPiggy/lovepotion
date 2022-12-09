@@ -326,6 +326,7 @@ static void Arith (lua_State *L, StkId ra, const TValue *rb,
       case TM_SUB: setnvalue(ra, luai_numsub(nb, nc)); break;
       case TM_MUL: setnvalue(ra, luai_nummul(nb, nc)); break;
       case TM_DIV: setnvalue(ra, luai_numdiv(nb, nc)); break;
+      case TM_IDIV: setnvalue(ra, luai_numidiv(nb, nc)); break;
       case TM_MOD: setnvalue(ra, luai_nummod(nb, nc)); break;
       case TM_POW: setnvalue(ra, luai_numpow(nb, nc)); break;
       case TM_UNM: setnvalue(ra, luai_numunm(nb)); break;
@@ -485,6 +486,10 @@ void luaV_execute (lua_State *L, int nexeccalls) {
       }
       case OP_DIV: {
         arith_op(luai_numdiv, TM_DIV);
+        continue;
+      }
+      case OP_IDIV: {
+        arith_op(luai_numidiv, TM_IDIV);
         continue;
       }
       case OP_MOD: {
