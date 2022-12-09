@@ -1275,6 +1275,20 @@ static int math_compare(lua_State* L)
     return 1;
 }
 
+static int math_mantissa(lua_State* L)
+{
+    lua_pushnumber(L, fabs(frexp(luaL_checknumber(L, 1), NULL)));
+    return 1;
+}
+
+static int math_exponent(lua_State* L)
+{
+    int e;
+    frexp(luaL_checknumber(L, 1), &e);
+    lua_pushinteger(L, e);
+    return 1;
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
@@ -1299,6 +1313,7 @@ static const luaL_Reg mathlib[] = {
   {"eps",  math_eps},
   {"erf",  math_erf},
   {"erfc", math_erfc},
+  {"exponent", math_exponent},
   {"exp",   math_exp},
   {"exp2", math_exp2},
   {"expm1", math_expm1},
@@ -1344,6 +1359,7 @@ static const luaL_Reg mathlib[] = {
   {"log",   math_log},
   {"logb",  math_logb},
   {"log2",  math_log2},
+  {"mantissa", math_mantissa},
   {"max",   math_max},
   {"mean", math_mean},
   {"min",   math_min},
@@ -1364,6 +1380,7 @@ static const luaL_Reg mathlib[] = {
   {"reverse", math_reverse},
   {"root", math_root},
   {"scalbn", math_scalbn},
+  {"significand", math_mantissa},
   {"sinh",   math_sinh},
   {"sin",   math_sin},
   {"sqr",  math_sqr},
