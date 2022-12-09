@@ -1247,6 +1247,21 @@ static int math_binomcoef(lua_State* L)
   return 1;
 }
 
+static int math_mean(lua_State* L)
+{
+    int n = lua_gettop(L); /* number of arguments */
+    double sum = 0;
+
+    for (int i = 1; i <= n; i++)
+    {
+        double a = luaL_checknumber(L, i);
+        sum = sum + a;
+    }
+
+    lua_pushnumber(L, sum / (double)n);
+    return 1;
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
@@ -1316,6 +1331,7 @@ static const luaL_Reg mathlib[] = {
   {"logb",  math_logb},
   {"log2",  math_log2},
   {"max",   math_max},
+  {"mean", math_mean},
   {"min",   math_min},
   {"modf",   math_modf},
   {"nearbyint", math_nearbyint},
