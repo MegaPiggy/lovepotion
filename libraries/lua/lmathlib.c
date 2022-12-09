@@ -1006,6 +1006,23 @@ static int math_lcm(lua_State* L)
     }
     return 1;
 }
+
+static int math_digit(lua_State* L)
+{
+  int n = luaL_checkinteger(L, 1);
+  int count = 0;
+ 
+  // iterate at least once, then until n becomes 0
+  // remove last digit from n in each iteration
+  // increase count by 1 in each iteration
+  do {
+    n /= 10;
+    ++count;
+  } while (n != 0);
+  
+  lua_pushinteger(L, count);
+  return 1;
+}
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1038,6 +1055,7 @@ static const luaL_Reg mathlib[] = {
   {"cosh",   math_cosh},
   {"cos",   math_cos},
   {"deg",   math_deg},
+  {"digit", math_digit},
   {"eps",  math_eps},
   {"erf",  math_erf},
   {"erfc", math_erfc},
