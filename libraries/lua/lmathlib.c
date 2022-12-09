@@ -146,6 +146,12 @@ static int math_modf (lua_State *L) {
   return 2;
 }
 
+static int math_sqr (lua_State *L) {
+  double x = luaL_checknumber(L, 1);
+  lua_pushnumber(L, x * x);
+  return 1;
+}
+
 static int math_sqrt (lua_State *L) {
   lua_pushnumber(L, sqrt(luaL_checknumber(L, 1)));
   return 1;
@@ -897,6 +903,7 @@ static const luaL_Reg mathlib[] = {
   {"scalbn", math_scalbn},
   {"sinh",   math_sinh},
   {"sin",   math_sin},
+  {"sqr",  math_sqr},
   {"sqrt",  math_sqrt},
   {"tanh",   math_tanh},
   {"tan",   math_tan},
