@@ -1114,6 +1114,43 @@ static int math_tostring(lua_State* L)
     
     return 1;
 }
+
+int sum_of_divisor(int num) {
+    // Variable to store the sum of all proper divisors.
+    int sum = 0;
+    // Below loop condition helps to reduce Time complexity by a factor of
+    // square root of the number.
+    for (int div = 2; div * div <= num; ++div) {
+        // Check 'div' is divisor of 'num'.
+        if (num % div == 0) {
+            // If both divisor are same, add once to 'sum'
+            if (div == (num / div)) {
+                sum += div;
+            } else {
+                // If both divisor are not the same, add both to 'sum'.
+                sum += (div + (num / div));
+            }
+        }
+    }
+    return sum + 1;
+}
+
+// Function to calculate the sum of all the proper divisor
+static int math_sumdivisor(lua_State* L)
+{
+    lua_pushinteger(L, sum_of_divisor(luaL_checkinteger(L, 1)));
+    return 1;
+}
+
+// Function to check whether the pair is amicable or not.
+static int math_amicable(lua_State* L)
+{
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    lua_pushboolean(L, (sum_of_divisor(x) == y) && (sum_of_divisor(y) == x));
+    return 1;
+}
+
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1137,6 +1174,7 @@ static const luaL_Reg mathlib[] = {
   {"asin",  math_asin},
   {"atan2", math_atan2},
   {"atan",  math_atan},
+  {"amicable", math_amicable},
   {"approximately", math_approximately},
   {"bin",  math_bin},
   {"cbrt",  math_cbrt},
@@ -1216,6 +1254,7 @@ static const luaL_Reg mathlib[] = {
   {"sin",   math_sin},
   {"sqr",  math_sqr},
   {"sqrt",  math_sqrt},
+  {"sumdivisor", math_sumdivisor},
   {"tanh",   math_tanh},
   {"tan",   math_tan},
   {"tgamma", math_tgamma},
