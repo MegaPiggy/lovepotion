@@ -39,8 +39,14 @@
 #undef FUZZY_EPSILONF
 #define FUZZY_EPSILONF (1e-6)
 
-#undef EULER
-#define EULER (2.7182818284590451)
+#undef EULER   
+#define EULER (2.7182818284590452353602874713527)
+
+#undef LOG10E
+#define LOG10E (0.4342945f)
+
+#undef LOG2E
+#define LOG2E (1.442695f)
 
 #undef SQRT_FIVE
 #define SQRT_FIVE sqrt(5)
@@ -923,6 +929,10 @@ LUALIB_API int luaopen_math (lua_State *L) {
   lua_setfield(L, -2, "huge");
   lua_pushnumber(L, EULER);
   lua_setfield(L, -2, "e");
+  lua_pushnumber(L, LOG10E);
+  lua_setfield(L, -2, "log10e");
+  lua_pushnumber(L, LOG2E);
+  lua_setfield(L, -2, "log2e");
   lua_pushnumber(L, EPSILON);
   lua_setfield(L, -2, "epsilon");
   lua_pushnumber(L, EPSILONF);
