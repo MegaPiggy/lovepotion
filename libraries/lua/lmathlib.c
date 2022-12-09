@@ -480,12 +480,15 @@ static float perlin(float x, float y, float z)
 
 static int math_grad(lua_State* L)
 {
-  double hash = luaL_checknumber(L, 1);
+  unsigned char hash = (unsigned char)luaL_checkinteger(L, 1);
   double x = luaL_checknumber(L, 2);
   double y = luaL_checknumber(L, 3);
   double z = luaL_checknumber(L, 4);
 
-  double r = grad((unsigned char)((int)hash), (float)x, (float)y, (float)z);
+  unsigned char h = hash & 15;
+  double u = (h < 8) ? x : y;
+  double v = (h < 4) ? y : (h == 12 || h == 14) ? x : z;
+  double r = (h & 1 ? -u : u) + (h & 2 ? -v : v);
 
   lua_pushnumber(L, r);
 
@@ -496,7 +499,7 @@ static int math_fade(lua_State* L)
 {
   double t = luaL_checknumber(L, 1);
 
-  double r = fade((float)t);
+  double r = t * t * t * (t * (t * 6 - 15) + 10);
 
   lua_pushnumber(L, r);
 
@@ -508,8 +511,9 @@ static int math_lerp(lua_State* L)
   double t = luaL_checknumber(L, 1);
   double a = luaL_checknumber(L, 2);
   double b = luaL_checknumber(L, 3);
+  int precise = luaL_optboolean(L, 4, 0);
 
-  double r = lerp((float)t, (float)a, (float)b);
+  double r = precise ? ((1 - t) * a + t * b) : (a + t * (b - a));
 
   lua_pushnumber(L, r);
 
