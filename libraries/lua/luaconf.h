@@ -144,6 +144,14 @@
 
 
 /*
+@@ LUA_UNSIGNED is the integral type used by lua_pushunsigned/lua_tounsigned.
+** CHANGE that if size_t is not adequate on your machine. (On most
+** machines, size_t gives a good choice between uint or ulong.)
+*/
+#define LUA_UNSIGNED	size_t
+
+
+/*
 @@ LUA_API is a mark for all core API functions.
 @@ LUALIB_API is a mark for all standard library functions.
 ** CHANGE them if you need to define those functions in some special way.
@@ -577,10 +585,14 @@ union luai_Cast { double l_d; long l_l; };
 
 /* this option always works, but may be slow */
 #else
+
 #define lua_number2int(i,d)	((i)=(int)(d))
 #define lua_number2integer(i,d)	((i)=(lua_Integer)(d))
 
 #endif
+
+#define lua_number2uint(i,d) ((i)=(uint)(d))
+#define lua_number2unsigned(i,d) ((i)=(lua_Unsigned)(d))
 
 /* }================================================================== */
 

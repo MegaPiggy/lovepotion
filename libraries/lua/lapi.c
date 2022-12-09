@@ -353,6 +353,38 @@ LUA_API lua_Integer lua_tointegerx (lua_State *L, int idx, int* isnum) {
 }
 
 
+LUA_API lua_Unsigned lua_tounsigned (lua_State *L, int idx) {
+  TValue n;
+  const TValue *o = index2adr(L, idx);
+  if (tonumber(o, &n)) {
+    lua_Unsigned res;
+    lua_Number num = nvalue(o);
+    lua_number2unsigned(res, num);
+    return res;
+  }
+  else
+    return 0;
+}
+
+LUA_API lua_Unsigned lua_tounsignedx (lua_State *L, int idx, int* isnum) {
+  TValue n;
+  const TValue *o = index2adr(L, idx);
+  if (tonumber(o, &n)) {
+    lua_Unsigned res;
+    lua_Number num = nvalue(o);
+    lua_number2unsigned(res, num);
+    if (isnum)
+      *isnum = 1;
+    return res;
+  }
+  else {
+    if (isnum)
+      *isnum = 0;
+    return 0;
+  }
+}
+
+
 LUA_API int lua_toboolean (lua_State *L, int idx) {
   const TValue *o = index2adr(L, idx);
   return !l_isfalse(o);
@@ -454,6 +486,14 @@ LUA_API void lua_pushnumber (lua_State *L, lua_Number n) {
 
 
 LUA_API void lua_pushinteger (lua_State *L, lua_Integer n) {
+  lua_lock(L);
+  setnvalue(L->top, cast_num(n));
+  api_incr_top(L);
+  lua_unlock(L);
+}
+
+
+LUA_API void lua_pushunsigned (lua_State *L, lua_Unsigned n) {
   lua_lock(L);
   setnvalue(L->top, cast_num(n));
   api_incr_top(L);

@@ -191,8 +191,9 @@ LUALIB_API lua_Number luaL_optnumber (lua_State *L, int narg, lua_Number def) {
 
 
 LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, int narg) {
-  lua_Integer d = lua_tointeger(L, narg);
-  if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */
+  int isnum;
+  lua_Integer d = lua_tointegerx(L, narg, &isnum);
+  if (!isnum)
     tag_error(L, narg, LUA_TNUMBER);
   return d;
 }
@@ -201,6 +202,39 @@ LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, int narg) {
 LUALIB_API lua_Integer luaL_optinteger (lua_State *L, int narg,
                                                       lua_Integer def) {
   return luaL_opt(L, luaL_checkinteger, narg, def);
+}
+
+
+LUALIB_API lua_Unsigned luaL_checkunsigned(lua_State* L, int narg)
+{
+  int isnum;
+  lua_Unsigned d = lua_tounsignedx(L, narg, &isnum);
+  if (!isnum)
+    tag_error(L, narg, LUA_TNUMBER);
+  return d;
+}
+
+
+LUALIB_API lua_Unsigned luaL_optunsigned (lua_State *L, int narg,
+                                                      lua_Unsigned def) {
+  return luaL_opt(L, luaL_checkunsigned, narg, def);
+}
+
+
+LUALIB_API int luaL_checkboolean(lua_State* L, int narg)
+{
+    // This checks specifically for boolean values, ignoring
+    // all other truthy/falsy values. If the desired result
+    // is true if value is present then lua_toboolean should
+    // directly be used instead.
+    if (!lua_isboolean(L, narg))
+        tag_error(L, narg, LUA_TBOOLEAN);
+    return lua_toboolean(L, narg);
+}
+
+LUALIB_API int luaL_optboolean(lua_State* L, int narg, int def)
+{
+    return luaL_opt(L, luaL_checkboolean, narg, def);
 }
 
 

@@ -103,6 +103,10 @@ typedef LUA_NUMBER lua_Number;
 typedef LUA_INTEGER lua_Integer;
 
 
+/* type for unsigned functions */
+typedef LUA_UNSIGNED lua_Unsigned;
+
+
 
 /*
 ** state manipulation
@@ -146,6 +150,8 @@ LUA_API int            (lua_lessthan) (lua_State *L, int idx1, int idx2);
 LUA_API lua_Number      (lua_tonumber) (lua_State *L, int idx);
 LUA_API lua_Integer     (lua_tointeger) (lua_State *L, int idx);
 LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int* isnum);
+LUA_API lua_Unsigned     (lua_tounsigned) (lua_State *L, int idx);
+LUA_API lua_Unsigned     (lua_tounsignedx) (lua_State *L, int idx, int* isnum);
 LUA_API int             (lua_toboolean) (lua_State *L, int idx);
 LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
 LUA_API size_t          (lua_objlen) (lua_State *L, int idx);
@@ -161,6 +167,7 @@ LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
 LUA_API void  (lua_pushnil) (lua_State *L);
 LUA_API void  (lua_pushnumber) (lua_State *L, lua_Number n);
 LUA_API void  (lua_pushinteger) (lua_State *L, lua_Integer n);
+LUA_API void  (lua_pushunsigned) (lua_State *L, lua_Unsigned n);
 LUA_API void  (lua_pushlstring) (lua_State *L, const char *s, size_t l);
 LUA_API void  (lua_pushstring) (lua_State *L, const char *s);
 LUA_API const char *(lua_pushvfstring) (lua_State *L, const char *fmt,
