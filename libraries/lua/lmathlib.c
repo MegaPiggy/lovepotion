@@ -350,6 +350,11 @@ static int math_max (lua_State *L) {
   return 1;
 }
 
+static int math_nearbyint(lua_State* L)
+{
+    lua_pushnumber(L, nearbyint(luaL_checknumber(L, 1)));
+    return 1;
+}
 
 static int math_random (lua_State *L) {
   /* the `%' avoids the (rare) case of r==1, and is needed also because on
@@ -896,6 +901,7 @@ static const luaL_Reg mathlib[] = {
   {"max",   math_max},
   {"min",   math_min},
   {"modf",   math_modf},
+  {"nearbyint", math_nearbyint},
   {"nextafter", math_nextafter},
   {"nexttoward", math_nextforward},
   {"pow",   math_pow},
