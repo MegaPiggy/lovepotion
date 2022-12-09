@@ -49,11 +49,17 @@
 #define GOLDEN_RATIO ((1 + SQRT_FIVE) / 2)
 
 #undef PI
-#define PI (3.14159265358979323846)
+#define PI (3.141592653589793238462643383279502884)
 #define RADIANS_PER_DEGREE (PI / 180.0)
 
 #undef TAU
 #define TAU (PI * 2)
+
+#undef ETA
+#define ETA (PI / 2)
+
+#undef PIOVER4
+#define PIOVER4 (PI / 4)
 
 
 static int math_abs (lua_State *L) {
@@ -911,6 +917,8 @@ LUALIB_API int luaopen_math (lua_State *L) {
   lua_setfield(L, -2, "pi");
   lua_pushnumber(L, TAU);
   lua_setfield(L, -2, "tau");
+  lua_pushnumber(L, ETA);
+  lua_setfield(L, -2, "eta");
   lua_pushnumber(L, HUGE_VAL);
   lua_setfield(L, -2, "huge");
   lua_pushnumber(L, EULER);
