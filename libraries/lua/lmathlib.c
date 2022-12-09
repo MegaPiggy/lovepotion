@@ -1262,6 +1262,19 @@ static int math_mean(lua_State* L)
     return 1;
 }
 
+static int math_compare(lua_State* L)
+{
+    double a = luaL_checknumber(L, 1);
+    double b = luaL_checknumber(L, 2);
+    if (a == b)
+        lua_pushinteger(L, 0);
+    else if (a > b)
+        lua_pushinteger(L, 1);
+    else
+        lua_pushinteger(L, -1);
+    return 1;
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
@@ -1277,6 +1290,7 @@ static const luaL_Reg mathlib[] = {
   {"cbrt",  math_cbrt},
   {"ceil",  math_ceil},
   {"classify", math_classify},
+  {"compare", math_compare},
   {"copysign", math_copysign},
   {"cosh",   math_cosh},
   {"cos",   math_cos},
