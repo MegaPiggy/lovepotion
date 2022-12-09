@@ -964,6 +964,31 @@ static int str_endsWith(lua_State* L)
     return 1;
 }
 
+static int str_type(lua_State* L)
+{
+    size_t l;
+    const char* s = luaL_checklstring(L, 1, &l);
+    if (l != 1){
+        luaL_argerror(L, 1, "must be one letter long");
+        return 0;
+    }
+
+    char c = s[0];
+
+    // show error message if c is not an alphabet
+    if (!isalpha(c)){
+        luaL_argerror(L, 1, "non-alphabetic character");
+        return 0;
+    }
+    else if ((c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') || (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U'))
+        lua_pushliteral(L, "vowel");
+    else
+        lua_pushliteral(L, "consonant");
+
+    return 1;
+}
+
+
 static const luaL_Reg strlib[] = {
   {"byte", str_byte},
   {"char", str_char},
@@ -988,6 +1013,7 @@ static const luaL_Reg strlib[] = {
   {"trim", str_trim},
   {"trimstart", str_trimstart},
   {"trimend", str_trimend},
+  {"type", str_type},
   {NULL, NULL}
 };
 
