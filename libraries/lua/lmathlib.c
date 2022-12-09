@@ -701,6 +701,53 @@ static int math_toint(lua_State* L)
   return 1;
 }
 
+double exponentMod(double a, double b, double m)
+{
+    // Base cases
+    if (a == 0)
+        return 0;
+    if (b == 0)
+        return 1;
+ 
+    // If B is even
+    double y;
+    if (fmod(b, 2) == 0)
+    {
+        y = exponentMod(a, b / 2, m);
+        y = fmod((y * y), m);
+    }
+ 
+    // If B is odd
+    else
+    {
+        y = fmod(a, m);
+        y = fmod((y * fmod(exponentMod(a, b - 1, m), m)), m);
+    }
+ 
+    return fmod((y + m), m);
+}
+
+static int math_powmod(lua_State* L)
+{
+    lua_pushnumber(L, exponentMod(luaL_checknumber(L, 1),luaL_checknumber(L, 2),luaL_checknumber(L, 3)));
+    return 1;
+}
+
+static int math_invmod(lua_State* L)
+{
+    double a = luaL_checknumber(L, 1);
+    double m = luaL_checknumber(L, 2);
+    for (long long x = 1; x < m; x++)
+    {
+        if (fmod((fmod(a, m) * fmod(x, m)), m) == 1)
+        {
+            lua_pushinteger(L, x);
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static int math_rep(lua_State* L)
 {
   double t = luaL_checknumber(L, 1);
@@ -888,6 +935,7 @@ static const luaL_Reg mathlib[] = {
   {"frexp", math_frexp},
   {"grad", math_grad},
   {"hypot", math_hypot},
+  {"invmod", math_invmod},
   {"invsqrt", math_invsqrt},
   {"ilogb", math_ilogb},
   {"iseven", math_iseven},
@@ -913,6 +961,7 @@ static const luaL_Reg mathlib[] = {
   {"nextafter", math_nextafter},
   {"nexttoward", math_nextforward},
   {"pow",   math_pow},
+  {"powmod", math_powmod},
   {"quadratic", math_quadratic},
   {"rad",   math_rad},
   {"random",     math_random},
