@@ -532,6 +532,7 @@
 #define LUAI_MAXNUMBER2STR	32 /* 16 digits, sign, point, and \0 */
 #define lua_str2number(s,p)	strtod((s), (p))
 
+#include "lbit.h"
 
 /*
 @@ The luai_num* macros define the primitive operations over numbers.
@@ -544,6 +545,12 @@
 #define luai_numdiv(a,b)	((a)/(b))
 #define luai_nummod(a,b)	((a) - floor((a)/(b))*(b))
 #define luai_numpow(a,b)	(pow(a,b))
+#define luai_numband(a, b) (band(a, b))
+#define luai_numbor(a, b) (bor(a, b))
+#define luai_numbxor(a, b) (bxor(a, b))
+#define luai_numbnot(a) (bnot(a))
+#define luai_numshr(a, b) (rshift(a, b))
+#define luai_numshl(a, b) (lshift(a, b))
 #define luai_numunm(a)		(-(a))
 #define luai_numeq(a,b)		((a)==(b))
 #define luai_numlt(a,b)		((a)<(b))
