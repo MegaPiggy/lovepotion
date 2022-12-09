@@ -879,6 +879,55 @@ static int math_bin(lua_State* L)
   return 1;
 }
 
+// Function to check whether the given number is a factorial of some number or not
+static int math_isfact(lua_State* L)
+{
+    unsigned n = luaL_checkinteger(L, 1);
+    if (n <= 0) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    for (unsigned i = 1;; i++) {
+        if (n % i != 0)
+            break;
+        n = n / i;
+    }
+    
+    lua_pushboolean(L, n == 1);
+    return 1;
+}
+
+/** function to find factorial of given number */
+unsigned factorial(unsigned n, unsigned step) {
+    unsigned res = 1;
+    for (unsigned i = n;; i -= step) {
+        if (i == 0 || i == 1)
+            return res;
+        res *= i;
+    }
+    return res;
+}
+
+static int math_fact(lua_State* L)
+{
+    int n = luaL_checkinteger(L, 1);
+
+    // no negative integers
+    if (n < 0){
+      luaL_argerror(L, 1, "factorial of a negative integer doesn't exist");
+    }
+
+    if (n < 17)
+    {
+        lua_pushinteger(L, factorial(n, luaL_optinteger(L, 2, 1))); 
+        return 1;
+    }
+    else
+    {
+        lua_pushnumber(L, HUGE_VAL); 
+        return 1;
+    }
+}
 
 static int math_fib(lua_State* L)
 {
@@ -921,6 +970,7 @@ static const luaL_Reg mathlib[] = {
   {"fade", math_fade},
   {"fdim", math_fdim},
   {"fib", math_fib},
+  {"fact", math_fact},
   {"floor", math_floor},
   {"fma",  math_fma},
   {"fmod",   math_fmod},
@@ -938,6 +988,7 @@ static const luaL_Reg mathlib[] = {
   {"ilogb", math_ilogb},
   {"iseven", math_iseven},
   {"isinf", math_isinf},
+  {"isfact", math_isfact},
   {"isfinite", math_isfinite},
   {"isnormal", math_isnormal},
   {"isnan", math_isnan},
