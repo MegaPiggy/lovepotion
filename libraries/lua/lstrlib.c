@@ -907,10 +907,42 @@ static int str_split(lua_State* L)
   return 1;
 }
 
+static int isPartOf(const char* w1, const char* w2)
+{
+    int i=0;
+    int j=0;
+
+    while(w1[i]!='\0'){
+        if(w1[i] == w2[j])
+        {
+            int init = i;
+            while (w1[i] == w2[j] && w2[j]!='\0')
+            {
+                j++;
+                i++;
+            }
+            if(w2[j]=='\0'){
+                return 1;
+            }
+            j=0;
+        }
+        i++;
+    }
+    return 0;
+}
+
+static int str_contains(lua_State* L)
+{
+    const char *self = luaL_checkstring(L, 1);
+    const char *part = luaL_checkstring(L, 2);
+    lua_pushboolean(L, isPartOf(self, part));
+    return 1;
+}
 
 static const luaL_Reg strlib[] = {
   {"byte", str_byte},
   {"char", str_char},
+  {"contains", str_contains},
   {"dump", str_dump},
   {"find", str_find},
   {"format", str_format},
