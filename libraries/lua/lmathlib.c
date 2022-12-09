@@ -654,6 +654,10 @@ static int math_classify(lua_State* L)
   return 1;
 }
 
+#ifdef MISSING_ISINF
+#define isinf(x) (!isnan(x) && isnan((x) - (x)))
+#endif
+
 static int math_isinf(lua_State* L)
 {
   lua_pushboolean(L, isinf(luaL_checknumber(L, 1)));
