@@ -1041,6 +1041,27 @@ static int math_ispalindrome(lua_State* L)
   lua_pushboolean(L, original == reversed);
   return 1;
 }
+
+static int math_isprime(lua_State* L){
+  int n = luaL_checkinteger(L, 1);
+  int flag = 1;
+
+  // 0 and 1 are not prime numbers
+  if (n == 0 || n == 1)
+    flag = 0;
+  else {
+    for (int i = 2; i <= n / 2; ++i) {
+      // if n is divisible by i, then n is not prime
+      if (n % i == 0) {
+        flag = 0;
+        break;
+      }
+    }
+  }
+
+  lua_pushboolean(L, flag);
+  return 1;
+}
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1109,6 +1130,7 @@ static const luaL_Reg mathlib[] = {
   {"isnan", math_isnan},
   {"isodd", math_isodd},
   {"ispalindrome", math_ispalindrome},
+  {"isprime", math_isprime},
   {"isunordered", math_isunordered},
   {"lcm", math_lcm},
   {"ldexp", math_ldexp},
