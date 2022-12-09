@@ -1062,6 +1062,30 @@ static int math_isprime(lua_State* L){
   lua_pushboolean(L, flag);
   return 1;
 }
+
+static int math_isarmstrong(lua_State* L){
+  int num = luaL_checkinteger(L, 1);
+  int originalNum = num;
+  int remainder;
+  int n = 0;
+  float result = 0.0;
+
+  // store the number of digits of num in n
+  for (originalNum = num; originalNum != 0; ++n) {
+       originalNum /= 10;
+  }
+
+  for (originalNum = num; originalNum != 0; originalNum /= 10) {
+    remainder = originalNum % 10;
+
+    // store the sum of the power of individual digits in result
+    result += pow(remainder, n);
+  }
+
+  // if num is equal to result, the number is an Armstrong number
+  lua_pushboolean(L, (int)result == num);
+  return 1;
+}
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1122,6 +1146,7 @@ static const luaL_Reg mathlib[] = {
   {"invmod", math_invmod},
   {"invsqrt", math_invsqrt},
   {"ilogb", math_ilogb},
+  {"isarmstrong", math_isarmstrong},
   {"iseven", math_iseven},
   {"isinf", math_isinf},
   {"isfact", math_isfact},
