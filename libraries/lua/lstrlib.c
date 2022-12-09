@@ -939,11 +939,37 @@ static int str_contains(lua_State* L)
     return 1;
 }
 
+static int str_startsWith(lua_State* L)
+{
+    const char *self = luaL_checkstring(L, 1);
+    size_t l;
+    const char *part = luaL_checklstring(L, 2, &l);
+    lua_pushboolean(L, strncmp(self, part, l) == 0);
+    return 1;
+}
+
+static int str_endsWith(lua_State* L)
+{
+    size_t sl;
+    const char* self = luaL_checklstring(L, 1, &sl);
+    size_t pl;
+    const char* part = luaL_checklstring(L, 2, &pl);
+
+    size_t cmpAt = sl - pl;
+    if (cmpAt < (size_t)0)
+        lua_pushboolean(L, 0);
+    else
+        lua_pushboolean(L, strcmp(self + cmpAt, part) == 0);
+
+    return 1;
+}
+
 static const luaL_Reg strlib[] = {
   {"byte", str_byte},
   {"char", str_char},
   {"contains", str_contains},
   {"dump", str_dump},
+  {"endsWith", str_endsWith},
   {"find", str_find},
   {"format", str_format},
   {"gfind", gfind_nodef},
@@ -958,6 +984,7 @@ static const luaL_Reg strlib[] = {
   {"sub", str_sub},
   {"upper", str_upper},
   {"split", str_split},
+  {"startsWith", str_startsWith},
   {"trim", str_trim},
   {"trimstart", str_trimstart},
   {"trimend", str_trimend},
