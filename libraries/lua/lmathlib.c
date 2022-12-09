@@ -42,6 +42,12 @@
 #undef EULER
 #define EULER (2.7182818284590451)
 
+#undef SQRT_FIVE
+#define SQRT_FIVE sqrt(5)
+
+#undef GOLDEN_RATIO
+#define GOLDEN_RATIO ((1 + SQRT_FIVE) / 2)
+
 #undef PI
 #define PI (3.14159265358979323846)
 #define RADIANS_PER_DEGREE (PI / 180.0)
@@ -792,6 +798,23 @@ static int math_bin(lua_State* L)
 }
 
 
+static int math_fib(lua_State* L)
+{
+    int n = luaL_checkinteger(L, 1);
+    int an = abs(n);
+    if (an > 46)
+      lua_pushnumber(L, HUGE_VAL);
+    else {
+      int m = an > n;
+      double numerator = pow(GOLDEN_RATIO, (double)n) - pow(1-GOLDEN_RATIO, (double)n);
+      double denominator = SQRT_FIVE;
+      // This cast should in general work, as the result is always an integer. 
+      // Floating point errors may occur!
+      lua_pushinteger(L, (int)(numerator/denominator)); 
+    }
+    return 1;
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
@@ -815,6 +838,7 @@ static const luaL_Reg mathlib[] = {
   {"expm1", math_expm1},
   {"fade", math_fade},
   {"fdim", math_fdim},
+  {"fib", math_fib},
   {"floor", math_floor},
   {"fma",  math_fma},
   {"fmod",   math_fmod},
@@ -907,6 +931,10 @@ LUALIB_API int luaopen_math (lua_State *L) {
   lua_setfield(L, -2, "mininteger");
   lua_pushinteger(L, LUA_MAXUNSIGNED);
   lua_setfield(L, -2, "maxunsigned");
+  lua_pushnumber(L, GOLDEN_RATIO);
+  lua_setfield(L, -2, "goldenratio");
+  lua_pushnumber(L, SQRT_FIVE);
+  lua_setfield(L, -2, "sqrtfive");
 #if defined(LUA_COMPAT_MOD)
   lua_getfield(L, -1, "fmod");
   lua_setfield(L, -2, "mod");
