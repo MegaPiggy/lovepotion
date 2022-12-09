@@ -1151,6 +1151,21 @@ static int math_amicable(lua_State* L)
     return 1;
 }
 
+// Function to find reverse of any number
+static int math_reverse(lua_State* L)
+{
+    int number = luaL_checkinteger(L, 1);
+    int reversedNumber = 0;
+    while (number != 0)
+    {
+        int remainder = number % 10;
+        reversedNumber = reversedNumber * 10 + remainder;
+        number /= 10;
+    }
+    lua_pushinteger(L, reversedNumber);
+    return 1;
+}
+
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1248,6 +1263,7 @@ static const luaL_Reg mathlib[] = {
   {"remainder", math_remainder},
   {"remquo", math_remquo},
   {"rep", math_rep},
+  {"reverse", math_reverse},
   {"root", math_root},
   {"scalbn", math_scalbn},
   {"sinh",   math_sinh},
