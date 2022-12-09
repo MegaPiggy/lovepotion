@@ -557,11 +557,11 @@ static int math_sign(lua_State* L)
 
 static int math_signbit(lua_State* L)
 {
-  int bit = signbit(luaL_checknumber(L, 1));
-  if (bit < 0)
+  double num = luaL_checknumber(L, 1);
+  if (num < 0.0)
     lua_pushinteger(L, 1);
   else
-    lua_pushinteger(L, bit);
+    lua_pushinteger(L, 0);
   return 1;
 }
 
