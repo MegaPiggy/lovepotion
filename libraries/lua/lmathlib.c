@@ -30,6 +30,9 @@
 #undef EPSILONF
 #define EPSILONF (1.401298E-45)
 
+#undef MOD
+#define MOD (1000003)
+
 #undef FUZZY_EPSILON
 #define FUZZY_EPSILON (1e-30)
 
@@ -906,6 +909,9 @@ LUALIB_API int luaopen_math (lua_State *L) {
   lua_setfield(L, -2, "maxunsigned");
 #if defined(LUA_COMPAT_MOD)
   lua_getfield(L, -1, "fmod");
+  lua_setfield(L, -2, "mod");
+#else
+  lua_pushnumber(L, MOD);
   lua_setfield(L, -2, "mod");
 #endif
   return 1;
