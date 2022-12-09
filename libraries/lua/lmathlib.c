@@ -1180,6 +1180,36 @@ static int math_carol(lua_State* L)
     return 1;
 }
 
+static unsigned permute(unsigned n, unsigned k)
+{
+    unsigned result = 1;
+
+    for (; n > k; --n)
+        result *= n;
+
+    return result;
+}
+
+static int math_permute(lua_State* L)
+{
+    lua_pushinteger(L, permute(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
+    return 1;
+}
+
+static inline unsigned binomial(unsigned n, unsigned k)
+{
+    if ( n - k > k )
+        return permute(n, n - k) / permute(k, 1);
+    else
+        return permute(n, k) / permute(n - k, 1);
+}
+
+static int math_binomial(lua_State* L)
+{
+    lua_pushinteger(L, binomial(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
+    return 1;
+}
+
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1197,6 +1227,26 @@ static int math_fib(lua_State* L)
     return 1;
 }
 
+// Returns value of Binomial Coefficient C(n, k)
+static int binomialCoeff(int n, int k)
+{
+    // Base Cases
+    if (k > n)
+        return 0;
+    if (k == 0 || k == n)
+        return 1;
+  
+    // Recur
+    return binomialCoeff(n - 1, k - 1)
+           + binomialCoeff(n - 1, k);
+}
+
+static int math_binomcoef(lua_State* L)
+{
+  lua_pushinteger(L, binomialCoeff(luaL_checkinteger(L, 1), luaL_checkinteger(L, 2)));
+  return 1;
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
@@ -1205,7 +1255,9 @@ static const luaL_Reg mathlib[] = {
   {"atan",  math_atan},
   {"amicable", math_amicable},
   {"approximately", math_approximately},
-  {"bin",  math_bin},
+  {"binary",  math_bin},
+  {"binom",  math_binomial},
+  {"binomcoef",  math_binomcoef},
   {"carol", math_carol},
   {"cbrt",  math_cbrt},
   {"ceil",  math_ceil},
@@ -1269,6 +1321,7 @@ static const luaL_Reg mathlib[] = {
   {"nearbyint", math_nearbyint},
   {"nextafter", math_nextafter},
   {"nexttoward", math_nextforward},
+  {"permute", math_permute},
   {"pow",   math_pow},
   {"powmod", math_powmod},
   {"quadratic", math_quadratic},
