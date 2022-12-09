@@ -1166,6 +1166,20 @@ static int math_reverse(lua_State* L)
     return 1;
 }
 
+// Function to find n'th carol number
+static int math_carol(lua_State* L)
+{
+    int n = luaL_checkinteger(L, 1);
+    int an = abs(n);
+    int result = pow(2, an) - 1;
+    result = result * result - 2;
+    if (an != n)
+        lua_pushinteger(L, -result);
+    else
+        lua_pushinteger(L, result);
+    return 1;
+}
+
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1192,6 +1206,7 @@ static const luaL_Reg mathlib[] = {
   {"amicable", math_amicable},
   {"approximately", math_approximately},
   {"bin",  math_bin},
+  {"carol", math_carol},
   {"cbrt",  math_cbrt},
   {"ceil",  math_ceil},
   {"classify", math_classify},
