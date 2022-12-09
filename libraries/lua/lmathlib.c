@@ -929,6 +929,83 @@ static int math_fact(lua_State* L)
     }
 }
 
+// Recursive function to return gcd of a and b
+static double gcd(double a, double b)
+{
+    if (a < b)
+        return gcd(b, a);
+ 
+    // base case
+    if (b < 0.001)
+        return a;
+    else
+        return (gcd(b, a - floor(a / b) * b));
+}
+
+static int math_gcd(lua_State* L)
+{
+    int n = lua_gettop(L); /* number of arguments */
+    if (n == 1)
+    {
+        double a = fabs(luaL_checknumber(L, 1));
+        lua_pushnumber(L, gcd(a,a));
+    }
+    else if (n == 2)
+    {
+        double a = fabs(luaL_checknumber(L, 1));
+        double b = fabs(luaL_checknumber(L, 2));
+        lua_pushnumber(L, gcd(a,b));
+    }
+    else
+    {
+        double result = fabs(luaL_checknumber(L, 1));
+        for (int i = 2; i <= n; i++)
+        {
+            double a = fabs(luaL_checknumber(L, i));
+            result = gcd(a, result);
+    
+            if(result == 1)
+            {
+                lua_pushinteger(L, 1);
+                return 1;
+            }
+        }
+        lua_pushnumber(L, result);
+    }
+    return 1;
+}
+
+// Function to return LCM of two numbers
+static double lcm(double a, double b)
+{
+    return (a / gcd(a, b)) * b;
+}
+
+static int math_lcm(lua_State* L)
+{
+    int n = lua_gettop(L); /* number of arguments */
+    if (n == 1)
+    {
+        double a = fabs(luaL_checknumber(L, 1));
+        lua_pushnumber(L, lcm(a,a));
+    }
+    else if (n == 2)
+    {
+        double a = fabs(luaL_checknumber(L, 1));
+        double b = fabs(luaL_checknumber(L, 2));
+        lua_pushnumber(L, lcm(a,b));
+    }
+    else
+    {
+        double ans = fabs(luaL_checknumber(L, 1));
+        for (int i = 2; i <= n; i++){
+            double a = fabs(luaL_checknumber(L, i));
+            ans = (((a * ans)) / (gcd(a, ans)));
+        }
+        lua_pushnumber(L, ans);
+    }
+    return 1;
+}
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -981,7 +1058,9 @@ static const luaL_Reg mathlib[] = {
   {"fuzzylt", math_fuzzyLt},
   {"fuzzyne", math_fuzzyNe},
   {"frexp", math_frexp},
+  {"gcd", math_gcd},
   {"grad", math_grad},
+  {"hcf", math_gcd},
   {"hypot", math_hypot},
   {"invmod", math_invmod},
   {"invsqrt", math_invsqrt},
@@ -994,6 +1073,7 @@ static const luaL_Reg mathlib[] = {
   {"isnan", math_isnan},
   {"isodd", math_isodd},
   {"isunordered", math_isunordered},
+  {"lcm", math_lcm},
   {"ldexp", math_ldexp},
   {"lerp", math_lerp},
   {"lgamma", math_lgamma},
