@@ -1023,6 +1023,24 @@ static int math_digit(lua_State* L)
   lua_pushinteger(L, count);
   return 1;
 }
+
+// Function to calculate order of the number
+static int math_ispalindrome(lua_State* L)
+{
+  int n = luaL_checkinteger(L, 1);
+  int reversed = 0;
+  int original = n;
+  // reversed integer is stored in reversed variable
+  while (n != 0)
+  {
+    int remainder = n % 10;
+    reversed = reversed * 10 + remainder;
+    n /= 10;
+  }
+  // palindrome if original and reversed are equal
+  lua_pushboolean(L, original == reversed);
+  return 1;
+}
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1090,6 +1108,7 @@ static const luaL_Reg mathlib[] = {
   {"isnormal", math_isnormal},
   {"isnan", math_isnan},
   {"isodd", math_isodd},
+  {"ispalindrome", math_ispalindrome},
   {"isunordered", math_isunordered},
   {"lcm", math_lcm},
   {"ldexp", math_ldexp},
