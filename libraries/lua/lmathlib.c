@@ -855,15 +855,13 @@ static int math_quadratic(lua_State* L)
 
 static int math_iseven(lua_State* L)
 {
-  int n = luaL_checkinteger(L, 1);
-  lua_pushboolean(L, n%2 == 0);
+  lua_pushboolean(L, luaL_checkinteger(L, 1) % 2 == 0);
   return 1;
 }
 
 static int math_isodd(lua_State* L)
 {
-  int n = luaL_checkinteger(L, 1);
-  lua_pushboolean(L, n%2 != 0);
+  lua_pushboolean(L, luaL_checkinteger(L, 1) % 2 != 0);
   return 1;
 }
 
