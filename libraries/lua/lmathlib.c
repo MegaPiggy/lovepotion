@@ -1086,6 +1086,34 @@ static int math_isarmstrong(lua_State* L){
   lua_pushboolean(L, (int)result == num);
   return 1;
 }
+
+
+static int math_tostring(lua_State* L)
+{
+    double val = luaL_checknumber(L, 1);
+    
+    // Check for NaN, -inf and inf
+    if (isnan(val)){
+        lua_pushliteral(L, "NaN");
+        return 1;
+    }
+    else if (isinf(val)){
+        if (val > 0.0)
+            lua_pushliteral(L, "inf");
+        else
+            lua_pushliteral(L, "-inf");
+        return 1;
+    }
+
+    luaL_Buffer b;
+    luaL_buffinit(L, &b);
+    char buff[512];   /* to store the formatted item */
+    sprintf(buff, "%.f", val);
+    luaL_addlstring(&b, buff, strlen(buff));
+    luaL_pushresult(&b);
+    
+    return 1;
+}
 static int math_fib(lua_State* L)
 {
     int n = luaL_checkinteger(L, 1);
@@ -1192,6 +1220,7 @@ static const luaL_Reg mathlib[] = {
   {"tan",   math_tan},
   {"tgamma", math_tgamma},
   {"tointeger", math_toint},
+  {"tostring", math_tostring},
   {"trunc", math_trunc},
   {"type", math_type},
   {"ult",   math_ult},
