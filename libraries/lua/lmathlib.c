@@ -157,6 +157,12 @@ static int math_sqrt (lua_State *L) {
   return 1;
 }
 
+static int math_invsqrt(lua_State* L)
+{
+    lua_pushnumber(L, 1.0 / sqrt(luaL_checknumber(L, 1)));
+    return 1;
+}
+
 static int math_cbrt(lua_State* L)
 {
   lua_pushnumber(L, cbrt(luaL_checknumber(L, 1)));
@@ -869,6 +875,7 @@ static const luaL_Reg mathlib[] = {
   {"frexp", math_frexp},
   {"grad", math_grad},
   {"hypot", math_hypot},
+  {"invsqrt", math_invsqrt},
   {"ilogb", math_ilogb},
   {"iseven", math_iseven},
   {"isinf", math_isinf},
