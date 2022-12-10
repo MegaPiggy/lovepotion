@@ -831,7 +831,7 @@ static int str_index(lua_State* L)
   int posi = posrelat(i - 1, l);
   
   if (posi < 0 || (size_t)posi > l)
-      return NULL; /* empty interval; return no values */
+      return 0; /* empty interval; return no values */
 
   lua_pushlstring(L, &s[posi], 1);
   
@@ -915,7 +915,6 @@ static int isPartOf(const char* w1, const char* w2)
     while(w1[i]!='\0'){
         if(w1[i] == w2[j])
         {
-            int init = i;
             while (w1[i] == w2[j] && w2[j]!='\0')
             {
                 j++;

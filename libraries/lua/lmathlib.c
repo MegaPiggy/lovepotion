@@ -1218,7 +1218,6 @@ static int math_fib(lua_State* L)
     if (an > 46)
       lua_pushnumber(L, HUGE_VAL);
     else {
-      int m = an > n;
       double numerator = pow(GOLDEN_RATIO, (double)n) - pow(1-GOLDEN_RATIO, (double)n);
       double denominator = SQRT_FIVE;
       // This cast should in general work, as the result is always an integer. 
