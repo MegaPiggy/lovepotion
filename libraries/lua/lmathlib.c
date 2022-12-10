@@ -738,7 +738,7 @@ static int math_invmod(lua_State* L)
 {
     double a = luaL_checknumber(L, 1);
     double m = luaL_checknumber(L, 2);
-    for (long long x = 1; x < m; x++)
+    for (int x = 1; x < m; x++)
     {
         if (fmod((fmod(a, m) * fmod(x, m)), m) == 1)
         {
@@ -746,7 +746,8 @@ static int math_invmod(lua_State* L)
             return 1;
         }
     }
-    return 0;
+    lua_pushnil(L);
+    return 1;
 }
 
 static int math_rep(lua_State* L)
