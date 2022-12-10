@@ -1275,7 +1275,8 @@ static int math_compare(lua_State* L)
 
 static int math_mantissa(lua_State* L)
 {
-    lua_pushnumber(L, fabs(frexp(luaL_checknumber(L, 1), NULL)));
+    int e;
+    lua_pushnumber(L, fabs(frexp(luaL_checknumber(L, 1), &e)));
     return 1;
 }
 
