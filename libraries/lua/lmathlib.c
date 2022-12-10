@@ -867,18 +867,15 @@ static int math_isodd(lua_State* L)
   return 1;
 }
 
-unsigned bin(unsigned n)
-{
-    if (n > 1)
-      return bin(n / 2);
-    return n % 2;
-}
-
 static int math_bin(lua_State* L)
 {
-  int n = luaL_checkinteger(L, 1);
-  lua_pushinteger(L, bin(n));
-  return 1;
+  int n = luaL_checkinteger(L, 1), i;
+  for(i = 0; n > 0; i++)
+  {
+    lua_pushinteger(L, n % 2);
+    n = n / 2;
+  }
+  return i;
 }
 
 // Function to check whether the given number is a factorial of some number or not
