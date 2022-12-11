@@ -13,6 +13,7 @@
 
 #include "lua.h"
 
+#include "lapi.h"
 #include "lauxlib.h"
 #include "ldebug.h"
 #include "lgc.h"
@@ -104,10 +105,10 @@ static void moveelements(lua_State* L, int srct, int dstt, int f, int e, int t)
 
     int n = e - f + 1; /* number of elements to move */
 
-    if (cast_to(unsigned int, f - 1) < cast_to(unsigned int, src->sizearray) &&
-        cast_to(unsigned int, t - 1) < cast_to(unsigned int, dst->sizearray) &&
-        cast_to(unsigned int, f - 1 + n) <= cast_to(unsigned int, src->sizearray) &&
-        cast_to(unsigned int, t - 1 + n) <= cast_to(unsigned int, dst->sizearray))
+    if (cast(unsigned int, f - 1) < cast(unsigned int, src->sizearray) &&
+        cast(unsigned int, t - 1) < cast(unsigned int, dst->sizearray) &&
+        cast(unsigned int, f - 1 + n) <= cast(unsigned int, src->sizearray) &&
+        cast(unsigned int, t - 1 + n) <= cast(unsigned int, dst->sizearray))
     {
         TValue* srcarray = src->array;
         TValue* dstarray = dst->array;

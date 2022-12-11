@@ -649,7 +649,7 @@ static TValue* index2addr(lua_State* L, int idx)
         TValue* o = L->base + (idx - 1);
         api_check(L, idx <= L->ci->top - L->base);
         if (o >= L->top)
-            return cast_to(TValue*, luaO_nilobject);
+            return cast(TValue*, luaO_nilobject);
         else
             return o;
     }
