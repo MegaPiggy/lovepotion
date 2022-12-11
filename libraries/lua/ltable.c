@@ -576,6 +576,39 @@ int luaH_getn (Table *t) {
   else return unbound_search(t, j);
 }
 
+Table* luaH_clone(lua_State* L, Table* tt)
+{
+  Table *t = luaM_new(L, Table);
+  luaC_link(L, obj2gco(t), LUA_TTABLE);
+  t->metatable = tt->metatable;
+  t->flags = tt->flags;
+  t->array = NULL;
+  t->sizearray = 0;
+  t->lsizenode = 0;
+  t->readonly = 0;
+  t->node = cast(Node *, dummynode);
+  t->lastfree = 0;
+
+  if (tt->sizearray)
+  {
+    t->array = luaM_newarray(L, tt->sizearray, TValue);
+    t->sizearray = tt->sizearray;
+
+    memcpy(t->array, tt->array, t->sizearray * sizeof(TValue));
+  }
+
+  if (tt->node != dummynode)
+  {
+    int size = 1 << tt->lsizenode;
+    t->node = luaM_newarray(L, size, Node);
+    t->lsizenode = tt->lsizenode;
+    memcpy(t->node, tt->node, size * sizeof(Node));
+    t->lastfree = tt->lastfree;
+  }
+
+  return t;
+}
+
 void luaH_clear(Table* tt)
 {
     /* clear array part */

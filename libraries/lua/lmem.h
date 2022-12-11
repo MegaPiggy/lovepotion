@@ -21,12 +21,15 @@
 		luaM_realloc_(L, (b), (on)*(e), (n)*(e)) : \
 		luaM_toobig(L))
 
+#define luaM_arraysize(n, e) ((cast(size_t, (n)) <= SIZE_MAX / (e)) ? (n) * (e) : (luaM_toobig(L), SIZE_MAX))
+
 #define luaM_freemem(L, b, s)	luaM_realloc_(L, (b), (s), 0)
 #define luaM_free(L, b)		luaM_realloc_(L, (b), sizeof(*(b)), 0)
 #define luaM_freearray(L, b, n, t)   luaM_reallocv(L, (b), n, 0, sizeof(t))
 
 #define luaM_malloc(L,t)	luaM_realloc_(L, NULL, 0, (t))
 #define luaM_new(L,t)		cast(t *, luaM_malloc(L, sizeof(t)))
+#define luaM_newarray(L, n, t) cast(t *, luaM_malloc(L, luaM_arraysize(n, sizeof(t))))
 #define luaM_newvector(L,n,t) \
 		cast(t *, luaM_reallocv(L, NULL, 0, n, sizeof(t)))
 
