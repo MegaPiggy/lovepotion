@@ -482,34 +482,34 @@ static int tfind(lua_State* L)
 
 static int tclear(lua_State* L)
 {
-    luaL_checktype(L, 1, LUA_TTABLE);
+  luaL_checktype(L, 1, LUA_TTABLE);
 
-    Table* tt = hvalue(L->base);
-    if (tt->readonly)
-        luaG_runerror(L, "Attempt to modify a readonly table");
+  Table* tt = hvalue(L->base);
+  if (tt->readonly)
+    luaG_runerror(L, "Attempt to modify a readonly table");
 
-    luaH_clear(tt);
-    return 0;
+  luaH_clear(tt);
+  return 0;
 }
 
 static int tfreeze(lua_State* L)
 {
-    luaL_checktype(L, 1, LUA_TTABLE);
-    luaL_argcheck(L, !lua_getreadonly(L, 1), 1, "table is already frozen");
-    luaL_argcheck(L, !luaL_getmetafield(L, 1, "__metatable"), 1, "table has a protected metatable");
+  luaL_checktype(L, 1, LUA_TTABLE);
+  luaL_argcheck(L, !lua_getreadonly(L, 1), 1, "table is already frozen");
+  luaL_argcheck(L, !luaL_getmetafield(L, 1, "__metatable"), 1, "table has a protected metatable");
 
-    lua_setreadonly(L, 1, true);
+  lua_setreadonly(L, 1, true);
 
-    lua_pushvalue(L, 1);
-    return 1;
+  lua_pushvalue(L, 1);
+  return 1;
 }
 
 static int tisfrozen(lua_State* L)
 {
-    luaL_checktype(L, 1, LUA_TTABLE);
+  luaL_checktype(L, 1, LUA_TTABLE);
 
-    lua_pushboolean(L, lua_getreadonly(L, 1));
-    return 1;
+  lua_pushboolean(L, lua_getreadonly(L, 1));
+  return 1;
 }
 
 static int tisempty(lua_State* L)
@@ -518,9 +518,9 @@ static int tisempty(lua_State* L)
 
   lua_settop(L, 2); /* create a 2nd argument if there isn't one */
   if (lua_next(L, 1))
-      lua_pushboolean(L, 0);
+    lua_pushboolean(L, 0);
   else
-      lua_pushboolean(L, 1);
+    lua_pushboolean(L, 1);
 
   return 1;
 }
@@ -531,8 +531,53 @@ static int tfirst(lua_State* L)
 
   lua_settop(L, 2); /* create a 2nd argument if there isn't one */
   if (!lua_next(L, 1))
-      lua_pushnil(L);
+    lua_pushnil(L);
 
+  return 1;
+}
+
+
+static int tlast(lua_State* L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+
+    lua_pushnil(L); /* first key */
+    if (lua_next(L, 1)){
+        while (true)
+        {
+            if (lua_nextx(L, 1, -2))
+            {
+                lua_pop(L, 1);
+            }
+            else{
+                break;
+            }
+        }
+        return 1;
+    }
+    else{
+        return 1;
+    }
+}
+
+static int tfirst_match(lua_State* L)
+{
+  luaL_checktype(L, 1, LUA_TTABLE);
+  luaL_checktype(L, 2, LUA_TFUNCTION);
+  lua_pushnil(L); /* first key */
+  while (lua_next(L, 1))
+  {
+    lua_pushvalue(L, 2);  /* function */
+    lua_pushvalue(L, -3); /* key */
+    lua_pushvalue(L, -3); /* value */
+    lua_call(L, 2, 1);
+    if (lua_toboolean(L, -1)) {
+      lua_pop(L, 1); /* pop the result of the callback */
+      return 1; /* exit the loop */
+    }
+    lua_pop(L, 2); /* remove value and result */
+  }
+  lua_pushnil(L);
   return 1;
 }
 
@@ -571,6 +616,8 @@ static const luaL_Reg tab_funcs[] = {
   {"isfrozen", tisfrozen},
   {"isempty", tisempty},
   {"first", tfirst},
+  {"last", tlast},
+  {"firstmatch", tfirst_match},
   {"clone", tclone},
   {NULL, NULL}
 };

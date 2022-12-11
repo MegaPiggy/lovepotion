@@ -1088,6 +1088,31 @@ LUA_API int lua_next (lua_State *L, int idx) {
   return more;
 }
 
+/* convert a stack index to positive */
+#define abs_index(L, i) ((i) > 0 || (i) <= LUA_REGISTRYINDEX ? (i) : lua_gettop(L) + (i) + 1)
+
+
+LUA_API int lua_nextx (lua_State *L, int idx, int keyidx) {
+  StkId t;
+  StkId key;
+  int absidx;
+  int more;
+  lua_lock(L);
+  t = index2adr(L, idx);
+  api_check(L, ttistable(t));
+  absidx = abs_index(L, keyidx);
+  key = index2adr(L, keyidx);
+  api_checkvalidindex(L, key);
+  more = luaH_next(L, hvalue(t), key);
+  if (more) {
+    api_incr_top(L);
+  }
+  else  /* no more elements */
+    lua_remove(L, absidx);   /* remove key */
+  lua_unlock(L);
+  return more;
+}
+
 
 LUA_API void lua_concat (lua_State *L, int n) {
   lua_lock(L);
