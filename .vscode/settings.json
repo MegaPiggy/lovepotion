@@ -1,0 +1,14 @@
+{
+	"files.associations": {
+		"lauxlib.h": "c",
+		"xiosbase": "c",
+		"queue": "c",
+		"iterator": "c",
+		"memory": "c",
+		"xutility": "c"
+	},
+	"Lua.runtime.version": "LuaJIT",
+	"Lua.workspace.library": [
+		"${3rd}/love2d/library"
+	]
+}
