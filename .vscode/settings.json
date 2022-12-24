@@ -5,7 +5,15 @@
 		"queue": "c",
 		"iterator": "c",
 		"memory": "c",
-		"xutility": "c"
+		"xutility": "c",
+		"lapi.h": "c",
+		"lhooklib.h": "c",
+		"stddef.h": "c",
+		"stdlib.h": "c",
+		"llimits.h": "c",
+		"lvm.h": "c",
+		"variant": "c",
+		"lualib.h": "c"
 	},
 	"Lua.runtime.version": "LuaJIT",
 	"Lua.workspace.library": [
