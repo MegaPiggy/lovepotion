@@ -180,3 +180,8 @@ LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);
 #endif
 
 
+/* }====================================================== */
+
+
+/* convert a stack index to positive */
+#define abs_index(L, i)		((i) > 0 || (i) <= LUA_REGISTRYINDEX ? (i) : lua_gettop(L) + (i) + 1)

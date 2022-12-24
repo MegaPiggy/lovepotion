@@ -115,7 +115,7 @@ solaris:
 
 # DO NOT DELETE
 
-lapi.o: lapi.c lua.h luaconf.h lapi.h lobject.h llimits.h ldebug.h \
+lapi.o: lapi.c lua.h luaconf.h lapi.h lauxlib.h lobject.h llimits.h ldebug.h \
   lstate.h ltm.h lzio.h lmem.h ldo.h lfunc.h lgc.h lstring.h ltable.h \
   lundump.h lvm.h
 lauxlib.o: lauxlib.c lua.h luaconf.h lauxlib.h

@@ -17,6 +17,7 @@
 #include "lua.h"
 
 #include "lapi.h"
+#include "lauxlib.h"
 #include "ldebug.h"
 #include "ldo.h"
 #include "lfunc.h"
@@ -1087,10 +1088,6 @@ LUA_API int lua_next (lua_State *L, int idx) {
   lua_unlock(L);
   return more;
 }
-
-/* convert a stack index to positive */
-#define abs_index(L, i) ((i) > 0 || (i) <= LUA_REGISTRYINDEX ? (i) : lua_gettop(L) + (i) + 1)
-
 
 LUA_API int lua_nextx (lua_State *L, int idx, int keyidx) {
   StkId t;
