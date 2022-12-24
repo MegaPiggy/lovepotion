@@ -14,3 +14,5 @@
 LUAI_FUNC void luaA_pushobject (lua_State *L, const TValue *o);
 
 #endif
+
+LUA_API void (lua_dumpstack) (lua_State *L);
