@@ -552,7 +552,7 @@ static int math_clamp(lua_State* L)
 static int math_sign(lua_State* L)
 {
   double v = luaL_checknumber(L, 1);
-  lua_pushnumber(L, v > 0.0 ? 1.0 : v < 0.0 ? -1.0 : 0.0);
+  lua_pushinteger(L, v > 0.0 ? 1 : v < 0.0 ? -1 : 0);
   return 1;
 }
 
