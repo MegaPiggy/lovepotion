@@ -107,6 +107,8 @@ typedef LUA_INTEGER lua_Integer;
 typedef LUA_UNSIGNED lua_Unsigned;
 
 
+typedef LUA_STRING lua_String;
+
 
 /*
 ** state manipulation

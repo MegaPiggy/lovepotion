@@ -136,6 +136,11 @@
 
 
 /*
+*/
+#define LUA_STRING	const char*
+
+
+/*
 @@ LUA_INTEGER is the integral type used by lua_pushinteger/lua_tointeger.
 ** CHANGE that if ptrdiff_t is not adequate on your machine. (On most
 ** machines, ptrdiff_t gives a good choice between int or long.)
