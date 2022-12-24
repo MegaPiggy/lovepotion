@@ -6,6 +6,8 @@
 
 
 #include <stdlib.h>
+#include <stddef.h>
+#include <stdbool.h>
 #include <string.h>
 #include <math.h>
 
@@ -883,7 +885,7 @@ static int math_isfact(lua_State* L)
 {
     unsigned n = luaL_checkinteger(L, 1);
     if (n <= 0) {
-        lua_pushboolean(L, 0);
+        lua_pushboolean(L, false);
         return 1;
     }
     for (unsigned i = 1;; i++) {
@@ -1043,16 +1045,16 @@ static int math_ispalindrome(lua_State* L)
 
 static int math_isprime(lua_State* L){
   int n = luaL_checkinteger(L, 1);
-  int flag = 1;
+  int flag = true;
 
   // 0 and 1 are not prime numbers
   if (n == 0 || n == 1)
-    flag = 0;
+    flag = false;
   else {
     for (int i = 2; i <= n / 2; ++i) {
       // if n is divisible by i, then n is not prime
       if (n % i == 0) {
-        flag = 0;
+        flag = false;
         break;
       }
     }
