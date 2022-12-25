@@ -1303,6 +1303,12 @@ static int math_dist(lua_State* L)
     return 1;
 }
 
+static int math_normalizeangle(lua_State* L)
+{
+    lua_pushinteger(L, (luaL_checkinteger(L, 1) + 180) % 360 - 180);
+    return 1;
+}
+
 static lua_Number clamp (lua_Number var, lua_Number min, lua_Number max){
 	if (var < min) return min;
 	if (var > max) return max;
@@ -1405,6 +1411,7 @@ static const luaL_Reg mathlib[] = {
   {"nearbyint", math_nearbyint},
   {"nextafter", math_nextafter},
   {"nexttoward", math_nextforward},
+  {"normdeg",   math_normalizeangle},
   {"permute", math_permute},
   {"pow",   math_pow},
   {"powmod", math_powmod},
