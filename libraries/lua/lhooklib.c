@@ -61,6 +61,12 @@ void lua_addhookc (lua_State *L, lua_String event, lua_CFunction function, lua_S
   lua_setfield(L, -2, id); 
 }
 
+void lua_removehook (lua_State *L, lua_String event, lua_String id) {
+  gethook(L, event);
+  lua_pushnil(L);
+  lua_setfield(L, -2, id); 
+}
+
 int lua_callhook (lua_State *L, lua_String event, int idx, int n) {
   int absidx = abs_index(L, idx);
   gethook(L, event);
@@ -82,6 +88,13 @@ static int hook_add (lua_State *L) {
   lua_addhook(L, event, 2, id);
   return 0;
 }
+
+static int hook_remove (lua_State *L) {
+  lua_String event = luaL_checkstring(L, 1);
+  lua_String id = luaL_checkstring(L, 2);
+  lua_removehook(L, event, id);
+  return 0;
+}
  
 static int hook_call (lua_State *L) {
   lua_String event = luaL_checkstring(L, 1);
@@ -91,6 +104,7 @@ static int hook_call (lua_State *L) {
 
 static const luaL_Reg hook_funcs[] = {
   {"add", hook_add},
+  {"remove", hook_remove},
   {"call", hook_call},
   {NULL, NULL}
 };
