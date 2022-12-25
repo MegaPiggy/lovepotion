@@ -1290,6 +1290,19 @@ static int math_exponent(lua_State* L)
     return 1;
 }
 
+static int math_dist(lua_State* L)
+{
+    lua_Number x1 = luaL_checknumber(L, 1);
+    lua_Number y1 = luaL_checknumber(L, 2);
+    lua_Number x2 = luaL_checknumber(L, 3);
+    lua_Number y2 = luaL_checknumber(L, 4);
+	  lua_Number xd = x2 - x1;
+	  lua_Number yd = y2 - y1;
+	
+    lua_pushnumber(L, sqrt(xd * xd + yd * yd));
+    return 1;
+}
+
 static lua_Number clamp (lua_Number var, lua_Number min, lua_Number max){
 	if (var < min) return min;
 	if (var > max) return max;
@@ -1334,6 +1347,7 @@ static const luaL_Reg mathlib[] = {
   {"cos",   math_cos},
   {"deg",   math_deg},
   {"digit", math_digit},
+  {"dist",   math_dist},
   {"eps",  math_eps},
   {"erf",  math_erf},
   {"erfc", math_erfc},
