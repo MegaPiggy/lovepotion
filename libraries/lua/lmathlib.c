@@ -1309,6 +1309,15 @@ static int math_normalizeangle(lua_State* L)
     return 1;
 }
 
+static int math_inrange(lua_State* L)
+{
+    lua_Number a = luaL_checknumber(L, 1);
+    lua_Number min = luaL_checknumber(L, 2);
+    lua_Number max = luaL_checknumber(L, 3);
+    lua_pushboolean(L, a >= min && a <= max);
+    return 1;
+}
+
 static lua_Number clamp (lua_Number var, lua_Number min, lua_Number max){
 	if (var < min) return min;
 	if (var > max) return max;
@@ -1379,6 +1388,7 @@ static const luaL_Reg mathlib[] = {
   {"grad", math_grad},
   {"hcf", math_gcd},
   {"hypot", math_hypot},
+  {"inrange",  math_inrange},
   {"invmod", math_invmod},
   {"invsqrt", math_invsqrt},
   {"ilogb", math_ilogb},
