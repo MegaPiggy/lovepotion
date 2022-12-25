@@ -1290,9 +1290,32 @@ static int math_exponent(lua_State* L)
     return 1;
 }
 
+static lua_Number clamp (lua_Number var, lua_Number min, lua_Number max){
+	if (var < min) return min;
+	if (var > max) return max;
+  return var;
+}
+
+static int math_approach(lua_State* L)
+{
+    lua_Number cur = luaL_checknumber(L, 1);
+    lua_Number target = luaL_checknumber(L, 2);
+    lua_Number inc = fabs(luaL_checknumber(L, 3));
+
+    if (cur < target)
+      lua_pushnumber(L, clamp(cur + inc, cur, target));
+    else if (cur > target)
+      lua_pushnumber(L, clamp(cur - inc, target, cur));
+    else
+      lua_pushnumber(L, target);
+
+    return 1;
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
+  {"approach",  math_approach},
   {"asin",  math_asin},
   {"atan2", math_atan2},
   {"atan",  math_atan},
