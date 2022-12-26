@@ -13,7 +13,10 @@
 		"llimits.h": "c",
 		"lvm.h": "c",
 		"variant": "c",
-		"lualib.h": "c"
+		"lualib.h": "c",
+		"functional": "c",
+		"string.h": "c",
+		"random": "c"
 	},
 	"Lua.runtime.version": "LuaJIT",
 	"Lua.workspace.library": [
