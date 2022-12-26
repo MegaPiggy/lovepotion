@@ -987,6 +987,25 @@ static int str_type(lua_State* L)
     return 1;
 }
 
+static int str_left(lua_State* L)
+{
+  lua_String str = luaL_checkstring(L, 1);
+  lua_Integer i = luaL_checkinteger(L, 2);
+  lua_settop(L, 1);
+  lua_pushinteger(L, 1);
+  lua_pushinteger(L, i);
+  return str_sub(L);
+}
+
+static int str_right(lua_State* L)
+{
+  lua_String str = luaL_checkstring(L, 1);
+  lua_Integer i = luaL_checkinteger(L, 2);
+  lua_settop(L, 1);
+  lua_pushinteger(L, -i);
+  return str_sub(L);
+}
+
 
 static const luaL_Reg strlib[] = {
   {"byte", str_byte},
@@ -1000,11 +1019,13 @@ static const luaL_Reg strlib[] = {
   {"gmatch", gmatch},
   {"gsub", str_gsub},
   {"index", str_index},
+  {"left", str_left},
   {"len", str_len},
   {"lower", str_lower},
   {"match", str_match},
   {"rep", str_rep},
   {"reverse", str_reverse},
+  {"right", str_right},
   {"sub", str_sub},
   {"upper", str_upper},
   {"split", str_split},
