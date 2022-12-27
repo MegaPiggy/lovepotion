@@ -51,6 +51,8 @@
 
 typedef struct lua_State lua_State;
 
+typedef struct global_State global_State;
+
 typedef int (*lua_CFunction) (lua_State *L);
 
 
@@ -284,6 +286,8 @@ LUA_API int (lua_gc) (lua_State *L, int what, int data);
 /*
 ** miscellaneous functions
 */
+
+LUA_API global_State  *(lua_global) (lua_State *L);
 
 LUA_API int   (lua_silence) (lua_State *L);
 

@@ -1200,6 +1200,11 @@ LUA_API int lua_gc (lua_State *L, int what, int data) {
 */
 
 
+LUA_API global_State *lua_global (lua_State *L) {
+  return L->l_G;
+}
+
+
 LUA_API int lua_silence (lua_State *L) {
   return 0;
 }
