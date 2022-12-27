@@ -94,7 +94,7 @@ static void preinit_state (lua_State *L, global_State *g) {
   L->openupval = NULL;
   L->size_ci = 0;
   L->nCcalls = L->baseCcalls = 0;
-  L->status = 0;
+  L->status = LUA_OK;
   L->base_ci = L->ci = NULL;
   L->savedpc = NULL;
   L->errfunc = 0;

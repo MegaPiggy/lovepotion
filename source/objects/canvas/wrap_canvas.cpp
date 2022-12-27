@@ -22,7 +22,7 @@ int Wrap_Canvas::RenderTo(lua_State* L)
 
         graphics->SetCanvas(nullptr);
 
-        if (status != 0)
+        if (status != LUA_OK)
             return lua_error(L);
     }
 

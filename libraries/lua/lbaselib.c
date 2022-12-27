@@ -264,7 +264,7 @@ static int luaB_ipairs (lua_State *L) {
 
 
 static int load_aux (lua_State *L, int status) {
-  if (status == 0)  /* OK? */
+  if (status == LUA_OK)  /* OK? */
     return 1;
   else {
     lua_pushnil(L);
@@ -375,7 +375,7 @@ static int luaB_pcall (lua_State *L) {
   int status;
   luaL_checkany(L, 1);
   status = lua_pcall(L, lua_gettop(L) - 1, LUA_MULTRET, 0);
-  lua_pushboolean(L, (status == 0));
+  lua_pushboolean(L, (status == LUA_OK));
   lua_insert(L, 1);
   return lua_gettop(L);  /* return status + all results */
 }
@@ -387,7 +387,7 @@ static int luaB_xpcall (lua_State *L) {
   lua_settop(L, 2);
   lua_insert(L, 1);  /* put error function under function to be called */
   status = lua_pcall(L, 0, LUA_MULTRET, 1);
-  lua_pushboolean(L, (status == 0));
+  lua_pushboolean(L, (status == LUA_OK));
   lua_replace(L, 1);
   return lua_gettop(L);  /* return status + all results */
 }
@@ -557,7 +557,7 @@ static int auxresume (lua_State *L, lua_State *co, int narg) {
   lua_xmove(L, co, narg);
   lua_setlevel(L, co);
   status = lua_resume(co, narg);
-  if (status == 0 || status == LUA_YIELD) {
+  if (status == LUA_OK || status == LUA_YIELD) {
     int nres = lua_gettop(co);
     if (!lua_checkstack(L, nres + 1))
       luaL_error(L, "too many results to resume");

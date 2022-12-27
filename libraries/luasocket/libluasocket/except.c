@@ -89,7 +89,7 @@ static int unwrap(lua_State *L) {
 
 static int protected_finish(lua_State *L, int status, lua_KContext ctx) {
     (void)ctx;
-    if (status != 0 && status != LUA_YIELD) {
+    if (status != LUA_OK && status != LUA_YIELD) {
         if (unwrap(L)) return 2;
         else return lua_error(L);
     } else return lua_gettop(L);
