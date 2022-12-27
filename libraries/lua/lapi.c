@@ -462,11 +462,13 @@ LUA_API void *lua_tolightuserdata(lua_State *L, int idx)
 
 LUA_API void *lua_touserdata (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
-  switch (ttype(o)) {
-    case LUA_TUSERDATA: return (rawuvalue(o) + 1);
-    case LUA_TLIGHTUSERDATA: return pvalue(o);
-    default: return NULL;
-  }
+  // fast-path: check userdata first since it is most likely the expected result
+  if (ttisuserdata(o))
+    return (rawuvalue(o) + 1);
+  else if (ttislightuserdata(o))
+    return pvalue(o);
+  else
+    return NULL;
 }
 
 
