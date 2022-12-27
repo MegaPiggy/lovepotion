@@ -1494,7 +1494,7 @@ LUALIB_API int luaopen_math (lua_State *L) {
   lua_pushinteger(L, LUA_MAXUNSIGNED);
   lua_setfield(L, -2, "maxunsigned");
   lua_pushnumber(L, GOLDEN_RATIO);
-  lua_setfield(L, -2, "goldenratio");
+  lua_setfield(L, -2, "phi");
   lua_pushnumber(L, SQRT_FIVE);
   lua_setfield(L, -2, "sqrtfive");
 #if defined(LUA_COMPAT_MOD)
