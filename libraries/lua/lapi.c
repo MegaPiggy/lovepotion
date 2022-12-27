@@ -78,6 +78,25 @@ static TValue *index2adr (lua_State *L, int idx) {
 }
 
 
+static TValue* index2addr(lua_State* L, int idx)
+{
+    if (idx > 0)
+    {
+        TValue* o = L->base + (idx - 1);
+        api_check(L, idx <= L->ci->top - L->base);
+        if (o >= L->top)
+            return cast(TValue*, luaO_nilobject);
+        else
+            return o;
+    }
+    else if (idx > LUA_REGISTRYINDEX)
+    {
+        api_check(L, idx != 0 && -idx <= L->top - L->base);
+        return L->top + idx;
+    }
+}
+
+
 static Table *getcurrenv (lua_State *L) {
   if (L->ci == L->base_ci)  /* no enclosing function? */
     return hvalue(gt(L));  /* use global table as environment */
@@ -614,6 +633,20 @@ LUA_API void lua_getfield (lua_State *L, int idx, const char *k) {
 }
 
 
+LUA_API void lua_rawgetfield(lua_State* L, int idx, const char* k)
+{
+  StkId t;
+  TValue key;
+  lua_lock(L);
+  t = index2addr(L, idx);
+  api_check(L, ttistable(t));
+  setsvalue(L, &key, luaS_new(L, k));
+  setobj2s(L, L->top, luaH_getstr(hvalue(t), tsvalue(&key)));
+  api_incr_top(L);
+  lua_unlock(L);
+}
+
+
 LUA_API void lua_rawget (lua_State *L, int idx) {
   StkId t;
   lua_lock(L);
@@ -632,25 +665,6 @@ LUA_API void lua_rawgeti (lua_State *L, int idx, int n) {
   setobj2s(L, L->top, luaH_getnum(hvalue(o), n));
   api_incr_top(L);
   lua_unlock(L);
-}
-
-
-static TValue* index2addr(lua_State* L, int idx)
-{
-    if (idx > 0)
-    {
-        TValue* o = L->base + (idx - 1);
-        api_check(L, idx <= L->ci->top - L->base);
-        if (o >= L->top)
-            return cast(TValue*, luaO_nilobject);
-        else
-            return o;
-    }
-    else if (idx > LUA_REGISTRYINDEX)
-    {
-        api_check(L, idx != 0 && -idx <= L->top - L->base);
-        return L->top + idx;
-    }
 }
 
 
@@ -744,6 +758,22 @@ LUA_API void lua_setfield (lua_State *L, int idx, const char *k) {
   setsvalue(L, &key, luaS_new(L, k));
   luaV_settable(L, t, &key, L->top - 1);
   L->top--;  /* pop value */
+  lua_unlock(L);
+}
+
+
+LUA_API void lua_rawsetfield(lua_State* L, int idx, const char* k)
+{
+  StkId t;
+  lua_lock(L);
+  api_checknelems(L, 1);
+  t = index2addr(L, idx);
+  api_check(L, ttistable(t));
+  if (hvalue(t)->readonly)
+    luaG_runerror(L, "Attempt to modify a readonly table");
+  setobj2t(L, luaH_setstr(L, hvalue(t), luaS_new(L, k)), L->top - 1);
+  luaC_barriert(L, hvalue(t), L->top - 1);
+  L->top--;
   lua_unlock(L);
 }
 
