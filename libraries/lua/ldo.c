@@ -390,7 +390,7 @@ static void resume (lua_State *L, void *ud) {
       return;
   }
   else {  /* resuming from previous yield */
-    lua_assert(L->status == LUA_YIELD);
+    lua_assert(L->status == LUA_YIELD || L->status == LUA_BREAK);
     L->status = LUA_OK;
     if (!f_isLua(ci)) {  /* `common' yield? */
       /* finish interrupted execution of `OP_CALL' */
@@ -418,7 +418,7 @@ static int resume_error (lua_State *L, const char *msg) {
 LUA_API int lua_resume (lua_State *L, int nargs) {
   int status;
   lua_lock(L);
-  if (L->status != LUA_YIELD && (L->status != 0 || L->ci != L->base_ci))
+  if (L->status != LUA_YIELD && L->status != LUA_BREAK && (L->status != 0 || L->ci != L->base_ci))
       return resume_error(L, "cannot resume non-suspended coroutine");
   if (L->nCcalls >= LUAI_MAXCCALLS)
     return resume_error(L, "C stack overflow");
