@@ -108,6 +108,7 @@ typedef LUA_INTEGER lua_Integer;
 typedef LUA_UNSIGNED lua_Unsigned;
 
 
+/* type for strings in Lua */
 typedef LUA_STRING lua_String;
 
 
