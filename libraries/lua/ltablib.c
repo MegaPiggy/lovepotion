@@ -581,6 +581,41 @@ static int tfirst_match(lua_State* L)
   return 1;
 }
 
+static int tlast_match(lua_State* L)
+{
+  luaL_checktype(L, 1, LUA_TTABLE);
+  luaL_checktype(L, 2, LUA_TFUNCTION);
+
+  /* Store the last matching key-value pair here. */
+  lua_pushnil(L);
+  lua_pushnil(L);
+
+  /* Get the length of the table. */
+  int len = luaL_getn(L, 1);
+  for (int i = len; i >= 1; i--)
+  {
+    /* Push the current index onto the stack. */
+    lua_pushinteger(L, i);
+
+    /* Get the value at the current index. */
+    lua_gettable(L, 1);
+
+    lua_pushvalue(L, 2);  /* function */
+    lua_pushinteger(L, i); /* key */
+    lua_pushvalue(L, -3); /* value */
+    lua_call(L, 2, 1);
+    if (lua_toboolean(L, -1)) {
+      /* Replace the stored key-value pair with the current one. */
+      lua_pop(L, 1); /* pop the result of the callback */
+      lua_pushinteger(L, i); /* key */
+      lua_pushvalue(L, -3); /* value */
+    }
+  }
+
+  /* Return the last matching key-value pair. */
+  return 2;
+}
+
 static int tclone(lua_State* L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
