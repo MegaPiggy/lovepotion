@@ -278,6 +278,13 @@ LUA_API int lua_iscfunction (lua_State *L, int idx) {
 }
 
 
+LUA_API int lua_isLfunction(lua_State* L, int idx)
+{
+  StkId o = index2addr(L, idx);
+  return isLfunction(o);
+}
+
+
 LUA_API int lua_isnumber (lua_State *L, int idx) {
   TValue n;
   const TValue *o = index2adr(L, idx);
