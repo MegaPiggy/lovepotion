@@ -453,6 +453,13 @@ LUA_API lua_CFunction lua_tocfunction (lua_State *L, int idx) {
 }
 
 
+LUA_API void *lua_tolightuserdata(lua_State *L, int idx)
+{
+  StkId o = index2addr(L, idx);
+  return (!ttislightuserdata(o)) ? NULL : pvalue(o);
+}
+
+
 LUA_API void *lua_touserdata (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
   switch (ttype(o)) {
