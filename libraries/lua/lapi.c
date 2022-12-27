@@ -176,6 +176,29 @@ LUA_API lua_State *lua_mainthread (lua_State *L) {
 }
 
 
+LUA_API void lua_resetthread (lua_State *L) {
+  /* close upvalues before clearing anything */
+  luaF_close(L, L->stack);
+  /* clear call frames */
+  CallInfo* ci = L->base_ci;
+  ci->func = L->stack;
+  ci->base = ci->func + 1;
+  ci->top = ci->base + LUA_MINSTACK;
+  setnilvalue(ci->func);
+  L->ci = ci;
+  luaD_reallocCI(L, BASIC_CI_SIZE);
+  /* clear thread state */
+  L->status = LUA_OK;
+  L->base = L->ci->base;
+  L->top = L->ci->base;
+  L->nCcalls = L->baseCcalls = 0;
+  /* clear thread stack */
+  luaD_reallocstack(L, BASIC_STACK_SIZE);
+  for (int i = 0; i < L->stacksize; i++)
+    setnilvalue(L->stack + i);
+}
+
+
 /*
 ** basic stack manipulation
 */

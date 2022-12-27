@@ -40,6 +40,7 @@
 
 
 /* thread status; 0 is OK */
+#define LUA_OK	0
 #define LUA_YIELD	1
 #define LUA_ERRRUN	2
 #define LUA_ERRSYNTAX	3
@@ -123,6 +124,7 @@ LUA_API lua_State *(lua_newstate) (lua_Alloc f, void *ud);
 LUA_API void       (lua_close) (lua_State *L);
 LUA_API lua_State *(lua_newthread) (lua_State *L);
 LUA_API lua_State *(lua_mainthread) (lua_State* L);
+LUA_API void       (lua_resetthread) (lua_State* L);
 
 LUA_API lua_CFunction (lua_atpanic) (lua_State *L, lua_CFunction panicf);
 
