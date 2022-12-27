@@ -8,22 +8,23 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
+#include "llimits.h"
 
 #define COLOR "color"
 
 typedef struct Color {
-  unsigned char red;
-  unsigned char green;
-  unsigned char blue;
-  unsigned char alpha;
+  lu_byte red;
+  lu_byte green;
+  lu_byte blue;
+  lu_byte alpha;
 } Color;
 
 // Function to create a new color
 static int color_new(lua_State *L) {
-  unsigned char red = (unsigned char)luaL_optinteger(L, 1, 255);
-  unsigned char green = (unsigned char)luaL_optinteger(L, 2, 255);
-  unsigned char blue = (unsigned char)luaL_optinteger(L, 3, 255);
-  unsigned char alpha = (unsigned char)luaL_optinteger(L, 4, 255);
+  lu_byte red = cast_byte(luaL_optinteger(L, 1, 255));
+  lu_byte green = cast_byte(luaL_optinteger(L, 2, 255));
+  lu_byte blue = cast_byte(luaL_optinteger(L, 3, 255));
+  lu_byte alpha = cast_byte(luaL_optinteger(L, 4, 255));
   Color *color = (Color*)lua_newuserdata(L, sizeof(Color));
   color->red = red;
   color->green = green;
@@ -44,7 +45,7 @@ static int color_get_red(lua_State *L) {
 // Function to set the red component of a color
 static int color_set_red(lua_State *L) {
   Color *color = (Color*)luaL_checkudata(L, 1, COLOR);
-  color->red = (unsigned char)luaL_checkinteger(L, 2);
+  color->red = cast_byte(luaL_checkinteger(L, 2));
   return 0;
 }
 
@@ -58,7 +59,7 @@ static int color_get_green(lua_State *L) {
 // Function to set the green component of a color
 static int color_set_green(lua_State *L) {
   Color *color = (Color*)luaL_checkudata(L, 1, COLOR);
-  color->green = (unsigned char)luaL_checkinteger(L, 2);
+  color->green = cast_byte(luaL_checkinteger(L, 2));
   return 0;
 }
 
@@ -72,7 +73,7 @@ static int color_get_blue(lua_State *L) {
 // Function to set the blue component of a color
 static int color_set_blue(lua_State *L) {
   Color *color = (Color*)luaL_checkudata(L, 1, COLOR);
-  color->blue = (unsigned char)luaL_checkinteger(L, 2);
+  color->blue = cast_byte(luaL_checkinteger(L, 2));
   return 0;
 }
 
@@ -86,7 +87,7 @@ static int color_get_alpha(lua_State *L) {
 // Function to set the alpha component of a color
 static int color_set_alpha(lua_State *L) {
   Color *color = (Color*)luaL_checkudata(L, 1, COLOR);
-  color->alpha = (unsigned char)luaL_checkinteger(L, 2);
+  color->alpha = cast_byte(luaL_checkinteger(L, 2));
   return 0;
 }
 

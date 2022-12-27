@@ -18,6 +18,7 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
+#include "llimits.h"
 
 
 #undef LUA_MAXINTEGER
@@ -408,7 +409,7 @@ static int math_type (lua_State *L) {
   return 1;
 }
 
-static const unsigned char kPerlin[512] = {151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99,
+static const lu_byte kPerlin[512] = {151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99,
   37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174,
   20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230, 220, 105, 92, 41,
   55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86,
@@ -438,9 +439,9 @@ static float lerp(float t, float a, float b)
   return a + t * (b - a);
 }
 
-static float grad(unsigned char hash, float x, float y, float z)
+static float grad(lu_byte hash, float x, float y, float z)
 {
-  unsigned char h = hash & 15;
+  lu_byte h = hash & 15;
   float u = (h < 8) ? x : y;
   float v = (h < 4) ? y : (h == 12 || h == 14) ? x : z;
 
@@ -465,7 +466,7 @@ static float perlin(float x, float y, float z)
   float v = fade(yf);
   float w = fade(zf);
 
-  const unsigned char* p = kPerlin;
+  const lu_byte* p = kPerlin;
 
   int a = p[xi] + yi;
   int aa = p[a] + zi;
@@ -483,12 +484,12 @@ static float perlin(float x, float y, float z)
 
 static int math_grad(lua_State* L)
 {
-  unsigned char hash = (unsigned char)luaL_checkinteger(L, 1);
+  lu_byte hash = cast_byte(luaL_checkinteger(L, 1));
   double x = luaL_checknumber(L, 2);
   double y = luaL_checknumber(L, 3);
   double z = luaL_checknumber(L, 4);
 
-  unsigned char h = hash & 15;
+  lu_byte h = hash & 15;
   double u = (h < 8) ? x : y;
   double v = (h < 4) ? y : (h == 12 || h == 14) ? x : z;
   double r = (h & 1 ? -u : u) + (h & 2 ? -v : v);
