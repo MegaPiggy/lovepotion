@@ -190,6 +190,15 @@ void luaD_callhook (lua_State *L, int event, int line) {
       ar.i_ci = 0;  /* tail call; no debug information about it */
     else
       ar.i_ci = cast_int(L->ci - L->base_ci);
+
+    int status = L->status;
+    // if the hook is called externally on a paused thread, we need to make sure the paused thread can emit Lua calls
+    if (status == LUA_YIELD || status == LUA_BREAK)
+    {
+        L->status = 0;
+        L->base = L->ci->base;
+    }
+    
     luaD_checkstack(L, LUA_MINSTACK);  /* ensure minimum stack size */
     L->ci->top = L->top + LUA_MINSTACK;
     lua_assert(L->ci->top <= L->stack_last);

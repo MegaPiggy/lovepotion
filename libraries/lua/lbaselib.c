@@ -526,7 +526,9 @@ static int costatus (lua_State *L, lua_State *co) {
   switch (lua_status(co)) {
     case LUA_YIELD:
       return CO_SUS;
-    case 0: {
+    case LUA_BREAK:
+      return CO_NOR;
+    case LUA_OK: {
       lua_Debug ar;
       if (lua_getstack(co, 0, &ar) > 0)  /* does it have frames? */
         return CO_NOR;  /* it is running */
@@ -577,11 +579,22 @@ static int auxresume (lua_State *L, lua_State *co, int narg) {
 }
 
 
+static int interruptThread(lua_State* L, lua_State* co)
+{
+    return lua_break(L);
+}
+
+
 static int luaB_coresume (lua_State *L) {
   lua_State *co = lua_tothread(L, 1);
   int r;
   luaL_argcheck(L, co, 1, "coroutine expected");
+  // if coroutine still hasn't yielded after the break, break current thread again
+  if (lua_status(co) == LUA_BREAK)
+    return interruptThread(L, co);
   r = auxresume(L, co, lua_gettop(L) - 1);
+  if (r == CO_STATUS_BREAK)
+    return interruptThread(L, co);
   if (r < 0) {
     lua_pushboolean(L, 0);
     lua_insert(L, -2);
@@ -597,7 +610,12 @@ static int luaB_coresume (lua_State *L) {
 
 static int luaB_auxwrap (lua_State *L) {
   lua_State *co = lua_tothread(L, lua_upvalueindex(1));
+  // if coroutine still hasn't yielded after the break, break current thread again
+  if (lua_status(co) == LUA_BREAK)
+    return interruptThread(L, co);
   int r = auxresume(L, co, lua_gettop(L));
+  if (r == CO_STATUS_BREAK)
+    return interruptThread(L, co);
   if (r < 0) {
     if (lua_isstring(L, -1)) {  /* error object is a string? */
       luaL_where(L, 1);  /* add extra info */
