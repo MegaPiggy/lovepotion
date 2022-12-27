@@ -453,6 +453,17 @@ LUA_API int lua_yield (lua_State *L, int nresults) {
 }
 
 
+LUA_API int lua_break(lua_State *L)
+{
+  lua_lock(L);
+  if (L->nCcalls > L->baseCcalls)
+    luaG_runerror(L, "attempt to break across metamethod/C-call boundary");
+  L->status = LUA_BREAK;
+  lua_unlock(L);
+  return -1;
+}
+
+
 int luaD_pcall (lua_State *L, Pfunc func, void *u,
                 ptrdiff_t old_top, ptrdiff_t ef) {
   int status;

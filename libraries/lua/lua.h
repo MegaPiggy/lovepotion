@@ -46,6 +46,7 @@
 #define LUA_ERRSYNTAX	3
 #define LUA_ERRMEM	4
 #define LUA_ERRERR	5
+#define LUA_BREAK	6
 
 
 typedef struct lua_State lua_State;
@@ -258,6 +259,7 @@ LUA_API int (lua_dump) (lua_State *L, lua_Writer writer, void *data);
 ** coroutine functions
 */
 LUA_API int  (lua_yield) (lua_State *L, int nresults);
+LUA_API int  (lua_break) (lua_State *L, int nresults);
 LUA_API int  (lua_resume) (lua_State *L, int narg);
 LUA_API int  (lua_status) (lua_State *L);
 
