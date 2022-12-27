@@ -171,6 +171,10 @@ LUA_API lua_State *lua_newthread (lua_State *L) {
 }
 
 
+LUA_API lua_State *lua_mainthread (lua_State *L) {
+  return L->l_G->mainthread;
+}
+
 
 /*
 ** basic stack manipulation
