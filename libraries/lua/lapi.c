@@ -1168,6 +1168,11 @@ LUA_API int lua_gc (lua_State *L, int what, int data) {
 */
 
 
+LUA_API int lua_silence (lua_State *L) {
+  return 0;
+}
+
+
 LUA_API int lua_error (lua_State *L) {
   lua_lock(L);
   api_checknelems(L, 1);
