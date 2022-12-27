@@ -24,7 +24,7 @@
 
 
 
-const TValue luaO_nilobject_ = {{NULL}, LUA_TNIL};
+const TValue luaO_nilobject_ = {{NULL}, {0}, LUA_TNIL};
 
 
 /*
@@ -76,6 +76,8 @@ int luaO_rawequalObj (const TValue *t1, const TValue *t2) {
       return 1;
     case LUA_TNUMBER:
       return luai_numeq(nvalue(t1), nvalue(t2));
+    case LUA_TVECTOR:
+      return luai_veceq(vvalue(t1), vvalue(t2));
     case LUA_TBOOLEAN:
       return bvalue(t1) == bvalue(t2);  /* boolean true must be 1 !! */
     case LUA_TLIGHTUSERDATA:

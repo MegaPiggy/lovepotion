@@ -73,8 +73,8 @@
 #define dummynode		(&dummynode_)
 
 static const Node dummynode_ = {
-  {{NULL}, LUA_TNIL},  /* value */
-  {{{NULL}, LUA_TNIL, NULL}}  /* key */
+  {{NULL}, {0}, LUA_TNIL},  /* value */
+  {{{NULL}, {0}, LUA_TNIL, NULL}}  /* key */
 };
 
 
@@ -92,6 +92,33 @@ static Node *hashnum (const Table *t, lua_Number n) {
 }
 
 
+static Node *hashvec(const Table* t, lua_Vector v)
+{
+    unsigned int i[LUA_VECTOR_SIZE];
+    memcpy(i, v, sizeof(i));
+
+    // convert -0 to 0 to make sure they hash to the same value
+    i[0] = (i[0] == 0x80000000) ? 0 : i[0];
+    i[1] = (i[1] == 0x80000000) ? 0 : i[1];
+    i[2] = (i[2] == 0x80000000) ? 0 : i[2];
+
+    // scramble bits to make sure that integer coordinates have entropy in lower bits
+    i[0] ^= i[0] >> 17;
+    i[1] ^= i[1] >> 17;
+    i[2] ^= i[2] >> 17;
+
+    // Optimized Spatial Hashing for Collision Detection of Deformable Objects
+    unsigned int h = (i[0] * 73856093) ^ (i[1] * 19349663) ^ (i[2] * 83492791);
+
+#if LUA_VECTOR_SIZE == 4
+    i[3] = (i[3] == 0x80000000) ? 0 : i[3];
+    i[3] ^= i[3] >> 17;
+    h ^= i[3] * 39916801;
+#endif
+
+    return hashpow2(t, h);
+}
+
 
 /*
 ** returns the `main' position of an element in a table (that is, the index
@@ -101,6 +128,8 @@ static Node *mainposition (const Table *t, const TValue *key) {
   switch (ttype(key)) {
     case LUA_TNUMBER:
       return hashnum(t, nvalue(key));
+    case LUA_TVECTOR:
+      return hashvec(t, vvalue(key));
     case LUA_TSTRING:
       return hashstr(t, rawtsvalue(key));
     case LUA_TBOOLEAN:

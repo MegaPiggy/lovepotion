@@ -418,6 +418,15 @@ LUA_API int lua_toboolean (lua_State *L, int idx) {
 }
 
 
+LUA_API lua_Vector lua_tovector(lua_State* L, int idx)
+{
+    StkId o = index2addr(L, idx);
+    if (!ttisvector(o))
+        return NULL;
+    return vvalue(o);
+}
+
+
 LUA_API const char *lua_tolstring (lua_State *L, int idx, size_t *len) {
   StkId o = index2adr(L, idx);
   if (!ttisstring(o)) {
@@ -534,6 +543,20 @@ LUA_API void lua_pushunsigned (lua_State *L, lua_Unsigned n) {
   api_incr_top(L);
   lua_unlock(L);
 }
+
+#if LUA_VECTOR_SIZE == 4
+LUA_API void lua_pushvector(lua_State* L, float x, float y, float z, float w)
+{
+    setvvalue(L->top, x, y, z, w);
+    api_incr_top(L);
+}
+#else
+LUA_API void lua_pushvector(lua_State* L, float x, float y, float z)
+{
+    setvvalue(L->top, x, y, z);
+    api_incr_top(L);
+}
+#endif
 
 
 LUA_API void lua_pushlstring (lua_State *L, const char *s, size_t len) {

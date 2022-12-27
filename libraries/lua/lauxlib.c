@@ -227,9 +227,25 @@ LUALIB_API int luaL_checkboolean(lua_State* L, int narg)
     return lua_toboolean(L, narg);
 }
 
+
 LUALIB_API int luaL_optboolean(lua_State* L, int narg, int def)
 {
     return luaL_opt(L, luaL_checkboolean, narg, def);
+}
+
+
+LUALIB_API lua_Vector luaL_checkvector(lua_State* L, int narg)
+{
+    lua_Vector v = lua_tovector(L, narg);
+    if (!v)
+        tag_error(L, narg, LUA_TVECTOR);
+    return v;
+}
+
+
+LUALIB_API lua_Vector luaL_optvector(lua_State* L, int narg, lua_Vector def)
+{
+    return luaL_opt(L, luaL_checkvector, narg, def);
 }
 
 

@@ -71,15 +71,16 @@ typedef void * (*lua_Alloc) (void *ud, void *ptr, size_t osize, size_t nsize);
 */
 #define LUA_TNONE		(-1)
 
-#define LUA_TNIL		0
-#define LUA_TBOOLEAN		1
+#define LUA_TNIL		0     // must be 0 due to lua_isnoneornil
+#define LUA_TBOOLEAN		1  // must be 1 due to l_isfalse
 #define LUA_TLIGHTUSERDATA	2
 #define LUA_TNUMBER		3
-#define LUA_TSTRING		4
-#define LUA_TTABLE		5
-#define LUA_TFUNCTION		6
-#define LUA_TUSERDATA		7
-#define LUA_TTHREAD		8
+#define LUA_TVECTOR		4  // all types above this must be value types, all types below this must be GC types - see iscollectable
+#define LUA_TSTRING		5
+#define LUA_TTABLE		6
+#define LUA_TFUNCTION		7
+#define LUA_TUSERDATA		8
+#define LUA_TTHREAD		9
 
 
 
@@ -108,6 +109,10 @@ typedef LUA_UNSIGNED lua_Unsigned;
 
 
 typedef LUA_STRING lua_String;
+
+
+/* type for vectors in Lua */
+typedef LUA_VECTOR lua_Vector;
 
 
 /*
@@ -156,6 +161,7 @@ LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int* isnum);
 LUA_API lua_Unsigned    (lua_tounsigned) (lua_State *L, int idx);
 LUA_API lua_Unsigned    (lua_tounsignedx) (lua_State *L, int idx, int* isnum);
 LUA_API int             (lua_toboolean) (lua_State *L, int idx);
+LUA_API lua_Vector      (lua_tovector) (lua_State *L, int idx);
 LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
 LUA_API size_t          (lua_objlen) (lua_State *L, int idx);
 LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, int idx);
@@ -172,6 +178,11 @@ LUA_API void  (lua_pushnil) (lua_State *L);
 LUA_API void  (lua_pushnumber) (lua_State *L, lua_Number n);
 LUA_API void  (lua_pushinteger) (lua_State *L, lua_Integer n);
 LUA_API void  (lua_pushunsigned) (lua_State *L, lua_Unsigned n);
+#if LUA_VECTOR_SIZE == 4
+LUA_API void  (lua_pushvector) (lua_State* L, float x, float y, float z, float w);
+#else
+LUA_API void  (lua_pushvector) (lua_State* L, float x, float y, float z);
+#endif
 LUA_API void  (lua_pushlstring) (lua_State *L, const char *s, size_t l);
 LUA_API void  (lua_pushstring) (lua_State *L, const char *s);
 LUA_API const char *(lua_pushvfstring) (lua_State *L, const char *fmt,

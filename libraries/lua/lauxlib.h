@@ -65,6 +65,9 @@ LUALIB_API lua_Unsigned (luaL_optunsigned) (lua_State *L, int nArg,
 LUALIB_API int (luaL_checkboolean) (lua_State *L, int narg);
 LUALIB_API int (luaL_optboolean) (lua_State *L, int narg, int def);
 
+LUALIB_API lua_Vector (luaL_checkvector) (lua_State *L, int narg);
+LUALIB_API lua_Vector (luaL_optvector) (lua_State *L, int narg, lua_Vector def);
+
 LUALIB_API void (luaL_checkstack) (lua_State *L, int sz, const char *msg);
 LUALIB_API void (luaL_checktype) (lua_State *L, int narg, int t);
 LUALIB_API void (luaL_checkany) (lua_State *L, int narg);

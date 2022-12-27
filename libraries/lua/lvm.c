@@ -57,6 +57,14 @@ int luaV_tostring (lua_State *L, StkId obj) {
 }
 
 
+const float* luaV_tovector(const TValue* obj)
+{
+    if (ttisvector(obj))
+        return obj->value.v;
+    return NULL;
+}
+
+
 static void traceexec (lua_State *L, const Instruction *pc) {
   lu_byte mask = L->hookmask;
   const Instruction *oldpc = L->savedpc;
@@ -258,6 +266,7 @@ int luaV_equalval (lua_State *L, const TValue *t1, const TValue *t2) {
   switch (ttype(t1)) {
     case LUA_TNIL: return 1;
     case LUA_TNUMBER: return luai_numeq(nvalue(t1), nvalue(t2));
+    case LUA_TVECTOR: return luai_veceq(vvalue(t1), vvalue(t2));
     case LUA_TBOOLEAN: return bvalue(t1) == bvalue(t2);  /* true must be 1 !! */
     case LUA_TLIGHTUSERDATA: return pvalue(t1) == pvalue(t2);
     case LUA_TUSERDATA: {
@@ -332,8 +341,116 @@ static void Arith (lua_State *L, StkId ra, const TValue *rb,
       default: lua_assert(0); break;
     }
   }
-  else if (!call_binTM(L, rb, rc, ra, op))
-    luaG_aritherror(L, rb, rc);
+  else {
+    // vector operations that we support: v + v, v - v, v * v, s * v, v * s, v / v, s / v, v / s, -v
+    lua_Vector vb = luaV_tovector(rb);
+    lua_Vector vc = luaV_tovector(rc);
+
+    if (vb != NULL && vc != NULL)
+    {
+      switch (op)
+      {
+        case TM_ADD:
+#if LUA_VECTOR_SIZE == 4
+          setvvalue(ra, vb[0] + vc[0], vb[1] + vc[1], vb[2] + vc[2], vb[3] + vc[3]);
+#else
+          setvvalue(ra, vb[0] + vc[0], vb[1] + vc[1], vb[2] + vc[2]);
+#endif
+          return;
+        case TM_SUB:
+#if LUA_VECTOR_SIZE == 4
+          setvvalue(ra, vb[0] - vc[0], vb[1] - vc[1], vb[2] - vc[2], vb[3] - vc[3]);
+#else
+          setvvalue(ra, vb[0] - vc[0], vb[1] - vc[1], vb[2] - vc[2]);
+#endif
+          return;
+        case TM_MUL:
+#if LUA_VECTOR_SIZE == 4
+          setvvalue(ra, vb[0] * vc[0], vb[1] * vc[1], vb[2] * vc[2], vb[3] * vc[3]);
+#else
+          setvvalue(ra, vb[0] * vc[0], vb[1] * vc[1], vb[2] * vc[2]);
+#endif
+          return;
+        case TM_DIV:
+#if LUA_VECTOR_SIZE == 4
+          setvvalue(ra, vb[0] / vc[0], vb[1] / vc[1], vb[2] / vc[2], vb[3] / vc[3]);
+#else
+          setvvalue(ra, vb[0] / vc[0], vb[1] / vc[1], vb[2] / vc[2]);
+#endif
+          return;
+        case TM_UNM:
+#if LUA_VECTOR_SIZE == 4
+          setvvalue(ra, -vb[0], -vb[1], -vb[2], -vb[3]);
+#else
+          setvvalue(ra, -vb[0], -vb[1], -vb[2]);
+#endif
+          return;
+        default:
+          break;
+      }
+    }
+    else if (vb != NULL)
+    {
+      c = luaV_tonumber(rc, &tempc);
+
+      if (c != NULL)
+      {
+        float nc = cast_float(nvalue(c));
+
+        switch (op)
+        {
+          case TM_MUL:
+#if LUA_VECTOR_SIZE == 4
+            setvvalue(ra, vb[0] * nc, vb[1] * nc, vb[2] * nc, vb[3] * nc);
+#else
+            setvvalue(ra, vb[0] * nc, vb[1] * nc, vb[2] * nc);
+#endif
+            return;
+          case TM_DIV:
+#if LUA_VECTOR_SIZE == 4
+            setvvalue(ra, vb[0] / nc, vb[1] / nc, vb[2] / nc, vb[3] / nc);
+            setvvalue(ra, vb[0] / nc, vb[1] / nc, vb[2] / nc);
+#else
+#endif
+            return;
+          default:
+            break;
+        }
+      }
+    }
+    else if (vc != NULL)
+    {
+      b = luaV_tonumber(rb, &tempb);
+
+      if (b != NULL)
+      {
+        float nb = cast_float(nvalue(b));
+
+        switch (op)
+        {
+          case TM_MUL:
+#if LUA_VECTOR_SIZE == 4
+            setvvalue(ra, nb * vc[0], nb * vc[1], nb * vc[2], nb * vc[3]);
+#else
+            setvvalue(ra, nb * vc[0], nb * vc[1], nb * vc[2]);
+#endif
+            return;
+          case TM_DIV:
+#if LUA_VECTOR_SIZE == 4
+            setvvalue(ra, nb / vc[0], nb / vc[1], nb / vc[2], nb / vc[3]);
+#else
+            setvvalue(ra, nb / vc[0], nb / vc[1], nb / vc[2]);
+#endif
+            return;
+          default:
+            break;
+        }
+      }
+    }
+
+    if (!call_binTM(L, rb, rc, ra, op))
+      luaG_aritherror(L, rb, rc);
+  }
 }
 
 

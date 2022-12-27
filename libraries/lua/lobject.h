@@ -14,6 +14,7 @@
 
 #include "llimits.h"
 #include "lua.h"
+#include "luaconf.h"
 
 
 /* tags for values visible from Lua */
@@ -61,6 +62,7 @@ typedef union {
   void *p;
   lua_Number n;
   int b;
+  float v[2]; // v[0], v[1] live here; v[2] lives in TValue::extra
 } Value;
 
 
@@ -68,7 +70,7 @@ typedef union {
 ** Tagged Values
 */
 
-#define TValuefields	Value value; int tt
+#define TValuefields	Value value; int tt; int extra[LUA_EXTRA_SIZE]
 
 typedef struct lua_TValue {
   TValuefields;
@@ -85,12 +87,14 @@ typedef struct lua_TValue {
 #define ttisuserdata(o)	(ttype(o) == LUA_TUSERDATA)
 #define ttisthread(o)	(ttype(o) == LUA_TTHREAD)
 #define ttislightuserdata(o)	(ttype(o) == LUA_TLIGHTUSERDATA)
+#define ttisvector(o)	(ttype(o) == LUA_TVECTOR)
 
 /* Macros to access values */
 #define ttype(o)	((o)->tt)
 #define gcvalue(o)	check_exp(iscollectable(o), (o)->value.gc)
 #define pvalue(o)	check_exp(ttislightuserdata(o), (o)->value.p)
 #define nvalue(o)	check_exp(ttisnumber(o), (o)->value.n)
+#define vvalue(o)	check_exp(ttisvector(o), (o)->value.v)
 #define rawtsvalue(o)	check_exp(ttisstring(o), &(o)->value.gc->ts)
 #define tsvalue(o)	(&rawtsvalue(o)->tsv)
 #define rawuvalue(o)	check_exp(ttisuserdata(o), &(o)->value.gc->u)
@@ -118,6 +122,14 @@ typedef struct lua_TValue {
 
 #define setnvalue(obj,x) \
   { TValue *i_o=(obj); i_o->value.n=(x); i_o->tt=LUA_TNUMBER; }
+
+#if LUA_VECTOR_SIZE == 4
+#define setvvalue(obj, x, y, z, w) \
+  { TValue* i_o = (obj); float* i_v = i_o->value.v; i_v[0] = (x); i_v[1] = (y); i_v[2] = (z); i_v[3] = (w); i_o->tt = LUA_TVECTOR; }
+#else
+#define setvvalue(obj, x, y, z) \
+    { TValue* i_o = (obj); float* i_v = i_o->value.v; i_v[0] = (x); i_v[1] = (y); i_v[2] = (z); i_o->tt = LUA_TVECTOR; }
+#endif
 
 #define setpvalue(obj,x) \
   { TValue *i_o=(obj); i_o->value.p=(x); i_o->tt=LUA_TLIGHTUSERDATA; }

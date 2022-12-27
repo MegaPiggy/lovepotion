@@ -141,6 +141,15 @@
 
 
 /*
+*/
+#define LUA_VECTOR	const float*
+
+#define LUA_VECTOR_SIZE 3 // must be 3 or 4
+
+#define LUA_EXTRA_SIZE (LUA_VECTOR_SIZE - 2)
+
+
+/*
 @@ LUA_INTEGER is the integral type used by lua_pushinteger/lua_tointeger.
 ** CHANGE that if ptrdiff_t is not adequate on your machine. (On most
 ** machines, ptrdiff_t gives a good choice between int or long.)
@@ -554,6 +563,24 @@
 #define luai_numlt(a,b)		((a)<(b))
 #define luai_numle(a,b)		((a)<=(b))
 #define luai_numisnan(a)	(!luai_numeq((a), (a)))
+
+inline int luai_veceq(const float *a, const float *b)
+{
+#if LUA_VECTOR_SIZE == 4
+    return a[0] == b[0] && a[1] == b[1] && a[2] == b[2] && a[3] == b[3];
+#else
+    return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+#endif
+}
+
+inline int luai_vecisnan(const float *a)
+{
+#if LUA_VECTOR_SIZE == 4
+    return a[0] != a[0] || a[1] != a[1] || a[2] != a[2] || a[3] != a[3];
+#else
+    return a[0] != a[0] || a[1] != a[1] || a[2] != a[2];
+#endif
+}
 #endif
 
 

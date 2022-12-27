@@ -410,6 +410,24 @@ static int luaB_tostring (lua_State *L) {
     case LUA_TNIL:
       lua_pushliteral(L, "nil");
       break;
+    case LUA_TVECTOR:
+    {
+        lua_Vector v = lua_tovector(L, 1);
+
+        char s[LUAI_MAXNUMBER2STR * LUA_VECTOR_SIZE];
+        char* e = s;
+        for (int i = 0; i < LUA_VECTOR_SIZE; ++i)
+        {
+            if (i != 0)
+            {
+                *e++ = ',';
+                *e++ = ' ';
+            }
+            e = lua_number2str(e, v[i]);
+        }
+        lua_pushlstring(L, s, e - s);
+        break;
+    }
     default:
       lua_pushfstring(L, "%s: %p", luaL_typename(L, 1), lua_topointer(L, 1));
       break;

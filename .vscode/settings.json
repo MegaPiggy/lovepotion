@@ -16,7 +16,18 @@
 		"lualib.h": "c",
 		"functional": "c",
 		"string.h": "c",
-		"random": "c"
+		"random": "c",
+		"optional": "c",
+		"ratio": "c",
+		"system_error": "c",
+		"array": "c",
+		"tuple": "c",
+		"type_traits": "c",
+		"utility": "c",
+		"lua.h": "c",
+		"stdarg.h": "c",
+		"limits.h": "c",
+		"sstream": "c"
 	},
 	"Lua.runtime.version": "LuaJIT",
 	"Lua.workspace.library": [
