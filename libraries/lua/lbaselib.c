@@ -638,6 +638,32 @@ static int luaB_coyieldable(lua_State* L)
     return 1;
 }
 
+static int luaB_coclose(lua_State* L)
+{
+    lua_State* co = lua_tothread(L, 1);
+    luaL_argexpected(L, co, 1, "thread");
+
+    int status = costatus(L, co);
+    if (status != CO_DEAD && status != CO_ERR && status != CO_SUS)
+        luaL_error(L, "cannot close %s coroutine", statnames[status]);
+
+    int co_status = lua_status(co);
+    if (co_status == LUA_OK || co_status == LUA_YIELD)
+    {
+        lua_pushboolean(L, 1);
+        lua_resetthread(co);
+        return 1;
+    }
+    else
+    {
+        lua_pushboolean(L, 0);
+        if (lua_gettop(co))
+            lua_xmove(co, L, 1); // move error message
+        lua_resetthread(co);
+        return 2;
+    }
+}
+
 
 static const luaL_Reg co_funcs[] = {
   {"create", luaB_cocreate},
@@ -647,6 +673,7 @@ static const luaL_Reg co_funcs[] = {
   {"wrap", luaB_cowrap},
   {"yield", luaB_yield},
   {"isyieldable", luaB_coyieldable},
+  {"close", luaB_coclose},
   {NULL, NULL}
 };
 
