@@ -884,6 +884,22 @@ LUA_API void *lua_newuserdata (lua_State *L, size_t size) {
 
 
 /*
+** remove functions
+*/
+
+
+LUA_API void lua_cleartable(lua_State* L, int idx)
+{
+    StkId t = index2addr(L, idx);
+    api_check(L, ttistable(t));
+    Table* tt = hvalue(t);
+    if (tt->readonly)
+        luaG_runerror(L, "Attempt to modify a readonly table");
+    luaH_clear(tt);
+}
+
+
+/*
 ** `load' and `call' functions (run Lua code)
 */
 

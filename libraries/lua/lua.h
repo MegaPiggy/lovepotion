@@ -218,6 +218,12 @@ LUA_API void *(lua_newuserdata) (lua_State *L, size_t sz);
 
 
 /*
+** remove functions
+*/
+LUA_API void  (lua_cleartable) (lua_State *L, int idx);
+
+
+/*
 ** `load' and `call' functions (load and run Lua code)
 */
 LUA_API void  (lua_call) (lua_State *L, int nargs, int nresults);
