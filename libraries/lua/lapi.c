@@ -199,6 +199,11 @@ LUA_API void lua_resetthread (lua_State *L) {
 }
 
 
+LUA_API int lua_isthreadreset (lua_State *L) {
+  return L->ci == L->base_ci && L->base == L->top && L->status == LUA_OK;
+}
+
+
 /*
 ** basic stack manipulation
 */
