@@ -25,6 +25,7 @@ static const luaL_Reg lualibs[] = {
   {LUA_DBLIBNAME, luaopen_debug},
   {LUA_VECTORLIBNAME, luaopen_vector},
   {LUA_HOOKLIBNAME, luaopen_hook},
+  {LUA_COLORLIBNAME, luaopen_color},
   {NULL, NULL}
 };
 
