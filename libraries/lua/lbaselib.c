@@ -515,6 +515,9 @@ static const luaL_Reg base_funcs[] = {
 #define CO_DEAD	3
 #define CO_ERR	4
 
+#define CO_STATUS_ERROR -1
+#define CO_STATUS_BREAK -2
+
 static const char *const statnames[] =
     {"running", "suspended", "normal", "dead", "dead"}; // dead appears twice for CO_ERR and CO_DEAD
 
@@ -552,7 +555,7 @@ static int auxresume (lua_State *L, lua_State *co, int narg) {
     luaL_error(L, "too many arguments to resume");
   if (status != CO_SUS) {
     lua_pushfstring(L, "cannot resume %s coroutine", statnames[status]);
-    return -1;  /* error flag */
+    return CO_STATUS_ERROR;  /* error flag */
   }
   lua_xmove(L, co, narg);
   lua_setlevel(L, co);
@@ -564,9 +567,12 @@ static int auxresume (lua_State *L, lua_State *co, int narg) {
     lua_xmove(co, L, nres);  /* move yielded values */
     return nres;
   }
+  else if (status == LUA_BREAK) {
+    return CO_STATUS_BREAK;
+  }
   else {
     lua_xmove(co, L, 1);  /* move error message */
-    return -1;  /* error flag */
+    return CO_STATUS_ERROR;  /* error flag */
   }
 }
 
