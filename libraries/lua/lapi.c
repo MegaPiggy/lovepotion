@@ -635,14 +635,6 @@ LUA_API void lua_rawgeti (lua_State *L, int idx, int n) {
 }
 
 
-LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
-  lua_lock(L);
-  luaC_checkGC(L);
-  sethvalue(L, L->top, luaH_new(L, narray, nrec));
-  api_incr_top(L);
-  lua_unlock(L);
-}
-
 static TValue* index2addr(lua_State* L, int idx)
 {
     if (idx > 0)
@@ -661,17 +653,8 @@ static TValue* index2addr(lua_State* L, int idx)
     }
 }
 
-void lua_setreadonly(lua_State* L, int objindex, int enabled)
-{
-    const TValue* o = index2addr(L, objindex);
-    api_check(L, ttistable(o));
-    Table* t = hvalue(o);
-    api_check(L, t != hvalue(registry(L)));
-    t->readonly = (bool)enabled;
-    return;
-}
 
-int lua_getreadonly(lua_State* L, int objindex)
+LUA_API int lua_getreadonly(lua_State* L, int objindex)
 {
     const TValue* o = index2addr(L, objindex);
     api_check(L, ttistable(o));
@@ -795,6 +778,17 @@ LUA_API void lua_rawseti (lua_State *L, int idx, int n) {
 }
 
 
+LUA_API void lua_setreadonly(lua_State* L, int objindex, int enabled)
+{
+    const TValue* o = index2addr(L, objindex);
+    api_check(L, ttistable(o));
+    Table* t = hvalue(o);
+    api_check(L, t != hvalue(registry(L)));
+    t->readonly = (bool)enabled;
+    return;
+}
+
+
 LUA_API int lua_setmetatable (lua_State *L, int objindex) {
   TValue *obj;
   Table *mt;
@@ -860,6 +854,32 @@ LUA_API int lua_setfenv (lua_State *L, int idx) {
   L->top--;
   lua_unlock(L);
   return res;
+}
+
+
+/*
+** create functions
+*/
+
+
+LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
+  lua_lock(L);
+  luaC_checkGC(L);
+  sethvalue(L, L->top, luaH_new(L, narray, nrec));
+  api_incr_top(L);
+  lua_unlock(L);
+}
+
+
+LUA_API void *lua_newuserdata (lua_State *L, size_t size) {
+  Udata *u;
+  lua_lock(L);
+  luaC_checkGC(L);
+  u = luaS_newudata(L, size, getcurrenv(L));
+  setuvalue(L, L->top, u);
+  api_incr_top(L);
+  lua_unlock(L);
+  return u + 1;
 }
 
 
@@ -1143,18 +1163,6 @@ LUA_API void lua_setallocf (lua_State *L, lua_Alloc f, void *ud) {
   G(L)->ud = ud;
   G(L)->frealloc = f;
   lua_unlock(L);
-}
-
-
-LUA_API void *lua_newuserdata (lua_State *L, size_t size) {
-  Udata *u;
-  lua_lock(L);
-  luaC_checkGC(L);
-  u = luaS_newudata(L, size, getcurrenv(L));
-  setuvalue(L, L->top, u);
-  api_incr_top(L);
-  lua_unlock(L);
-  return u + 1;
 }
 
 
