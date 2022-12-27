@@ -152,13 +152,13 @@ LUA_API int            (lua_lessthan) (lua_State *L, int idx1, int idx2);
 LUA_API lua_Number      (lua_tonumber) (lua_State *L, int idx);
 LUA_API lua_Integer     (lua_tointeger) (lua_State *L, int idx);
 LUA_API lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int* isnum);
-LUA_API lua_Unsigned     (lua_tounsigned) (lua_State *L, int idx);
-LUA_API lua_Unsigned     (lua_tounsignedx) (lua_State *L, int idx, int* isnum);
+LUA_API lua_Unsigned    (lua_tounsigned) (lua_State *L, int idx);
+LUA_API lua_Unsigned    (lua_tounsignedx) (lua_State *L, int idx, int* isnum);
 LUA_API int             (lua_toboolean) (lua_State *L, int idx);
 LUA_API const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);
 LUA_API size_t          (lua_objlen) (lua_State *L, int idx);
 LUA_API lua_CFunction   (lua_tocfunction) (lua_State *L, int idx);
-LUA_API void	       *(lua_touserdata) (lua_State *L, int idx);
+LUA_API void	         *(lua_touserdata) (lua_State *L, int idx);
 LUA_API lua_State      *(lua_tothread) (lua_State *L, int idx);
 LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
 
