@@ -513,9 +513,10 @@ static const luaL_Reg base_funcs[] = {
 #define CO_SUS	1	/* suspended */
 #define CO_NOR	2	/* 'normal' (it resumed another coroutine) */
 #define CO_DEAD	3
+#define CO_ERR	4
 
 static const char *const statnames[] =
-    {"running", "suspended", "normal", "dead"};
+    {"running", "suspended", "normal", "dead", "dead"}; // dead appears twice for CO_ERR and CO_DEAD
 
 static int costatus (lua_State *L, lua_State *co) {
   if (L == co) return CO_RUN;
@@ -532,7 +533,7 @@ static int costatus (lua_State *L, lua_State *co) {
         return CO_SUS;  /* initial state */
     }
     default:  /* some error occured */
-      return CO_DEAD;
+      return CO_ERR;
   }
 }
 
