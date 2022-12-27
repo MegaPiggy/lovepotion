@@ -464,6 +464,11 @@ LUA_API int lua_break(lua_State *L)
 }
 
 
+LUA_API int lua_isyieldable (lua_State *L) {
+  return (L->nCcalls <= L->baseCcalls);
+}
+
+
 int luaD_pcall (lua_State *L, Pfunc func, void *u,
                 ptrdiff_t old_top, ptrdiff_t ef) {
   int status;
