@@ -665,7 +665,7 @@ static int luaB_coyieldable(lua_State* L)
 static int luaB_coclose(lua_State* L)
 {
     lua_State* co = lua_tothread(L, 1);
-    luaL_argexpected(L, co, 1, "thread");
+    luaL_argcheck(L, co, 1, "coroutine expected");
 
     int status = costatus(L, co);
     if (status != CO_DEAD && status != CO_ERR && status != CO_SUS)
