@@ -482,9 +482,8 @@ LUA_API const void *lua_topointer (lua_State *L, int idx) {
     case LUA_TTABLE: return hvalue(o);
     case LUA_TFUNCTION: return clvalue(o);
     case LUA_TTHREAD: return thvalue(o);
-    case LUA_TUSERDATA:
-    case LUA_TLIGHTUSERDATA:
-      return lua_touserdata(L, idx);
+    case LUA_TUSERDATA: return (rawuvalue(o) + 1);
+    case LUA_TLIGHTUSERDATA: return pvalue(o);
     default: return NULL;
   }
 }
