@@ -1007,6 +1007,105 @@ static int str_right(lua_State* L)
 }
 
 
+char *replace(const char *source, const char *search, const char *replace) {
+  size_t search_len = strlen(search);
+  size_t replace_len = strlen(replace);
+  size_t src_len = strlen(source);
+
+  // Calculate the length of the resulting string
+  size_t result_len = src_len;
+  char *p = (char*)source;
+  while ((p = strstr(p, search))) {
+    result_len += replace_len - search_len;
+    p += search_len;
+  }
+
+  // Allocate memory for the resulting string
+  char *result = malloc(result_len + 1);
+  if (!result) return NULL;
+
+  // Replace the search string with the replace string
+  char *dst = result;
+  p = (char*)source;
+  while ((p = strstr(p, search))) {
+    size_t count = p - source;
+    memcpy(dst, source, count);
+    dst += count;
+    memcpy(dst, replace, replace_len);
+    dst += replace_len;
+    p += search_len;
+    source = p;
+  }
+  strcpy(dst, source);
+
+  return result;
+}
+
+static int str_replace(lua_State* L)
+{
+  // lua_String str = luaL_checkstring(L, 1);
+  // lua_String tofind = luaL_checkstring(L, 2);
+  // lua_String toreplace = luaL_checkstring(L, 3);
+  // lua_settop(L, 0);
+  // lua_pushstring(L, tofind);
+  // lua_pushstring(L, "[%-%^%$%(%)%%%.%[%]%*%+%-%?]");
+  // lua_pushstring(L, "%%%1");
+  // str_gsub(L);
+  // lua_String tofindResult = lua_tostring(L, -1);
+  // lua_settop(L, 0);
+  // lua_pushstring(L, toreplace);
+  // lua_pushstring(L, "%%");
+  // lua_pushstring(L, "%%%1");
+  // str_gsub(L);
+  // lua_String toreplaceResult = lua_tostring(L, -1);
+  // lua_settop(L, 0);
+  // lua_pushstring(L, str);
+  // lua_pushstring(L, tofindResult);
+  // lua_pushstring(L, toreplaceResult);
+  // return str_gsub(L);
+  size_t src_len;
+  lua_String source = luaL_checklstring(L, 1, &src_len);
+  size_t search_len;
+  lua_String search = luaL_checklstring(L, 2, &search_len);
+  size_t replace_len;
+  lua_String replace = luaL_checklstring(L, 3, &replace_len);
+
+  // Calculate the length of the resulting string
+  size_t result_len = src_len;
+  char *p = (char*)source;
+  while ((p = strstr(p, search))) {
+    result_len += replace_len - search_len;
+    p += search_len;
+  }
+  result_len++;
+
+  // Allocate memory for the resulting string
+  char *result = malloc(result_len);
+  if (!result){
+    lua_pushlstring(L, source, src_len);
+    return 1;
+  }
+
+  // Replace the search string with the replace string
+  char *dst = result;
+  p = (char*)source;
+  while ((p = strstr(p, search))) {
+    size_t count = p - source;
+    memcpy(dst, source, count);
+    dst += count;
+    memcpy(dst, replace, replace_len);
+    dst += replace_len;
+    p += search_len;
+    source = p;
+  }
+  strcpy(dst, source);
+
+  lua_pushlstring(L, result, result_len);
+  free(result);
+  return 1;
+}
+
+
 static const luaL_Reg strlib[] = {
   {"byte", str_byte},
   {"char", str_char},
@@ -1024,6 +1123,7 @@ static const luaL_Reg strlib[] = {
   {"lower", str_lower},
   {"match", str_match},
   {"rep", str_rep},
+  {"replace", str_replace},
   {"reverse", str_reverse},
   {"right", str_right},
   {"sub", str_sub},
