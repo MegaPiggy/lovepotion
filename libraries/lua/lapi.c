@@ -1366,6 +1366,10 @@ LUA_API void lua_dumpstack(lua_State* L)
             printf("%g", lua_tonumber(L, i));
             break;
     
+          case LUA_TVECTOR:  /* vector */
+            printf("%g", lua_tovector(L, i));
+            break;
+    
           default:  /* other values */
             printf("%s", lua_typename(L, t));
             break;

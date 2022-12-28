@@ -98,9 +98,9 @@ static Node *hashvec(const Table* t, lua_Vector v)
     memcpy(i, v, sizeof(i));
 
     // convert -0 to 0 to make sure they hash to the same value
-    i[0] = (i[0] == 0x80000000) ? 0 : i[0];
-    i[1] = (i[1] == 0x80000000) ? 0 : i[1];
-    i[2] = (i[2] == 0x80000000) ? 0 : i[2];
+    i[0] = (i[0] == 0x8000000) ? 0 : i[0];
+    i[1] = (i[1] == 0x8000000) ? 0 : i[1];
+    i[2] = (i[2] == 0x8000000) ? 0 : i[2];
 
     // scramble bits to make sure that integer coordinates have entropy in lower bits
     i[0] ^= i[0] >> 17;
@@ -111,7 +111,7 @@ static Node *hashvec(const Table* t, lua_Vector v)
     unsigned int h = (i[0] * 73856093) ^ (i[1] * 19349663) ^ (i[2] * 83492791);
 
 #if LUA_VECTOR_SIZE == 4
-    i[3] = (i[3] == 0x80000000) ? 0 : i[3];
+    i[3] = (i[3] == 0x8000000) ? 0 : i[3];
     i[3] ^= i[3] >> 17;
     h ^= i[3] * 39916801;
 #endif
