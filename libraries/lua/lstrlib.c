@@ -989,9 +989,11 @@ static int str_type(lua_State* L)
 
 static int str_left(lua_State* L)
 {
-  lua_String str = luaL_checkstring(L, 1);
+  size_t l;
+  lua_String s = luaL_checklstring(L, 1, &l);
   lua_Integer i = luaL_checkinteger(L, 2);
   lua_settop(L, 1);
+  lua_pushlstring(L, s, l);
   lua_pushinteger(L, 1);
   lua_pushinteger(L, i);
   return str_sub(L);
@@ -999,9 +1001,11 @@ static int str_left(lua_State* L)
 
 static int str_right(lua_State* L)
 {
-  lua_String str = luaL_checkstring(L, 1);
+  size_t l;
+  lua_String s = luaL_checklstring(L, 1, &l);
   lua_Integer i = luaL_checkinteger(L, 2);
   lua_settop(L, 1);
+  lua_pushlstring(L, s, l);
   lua_pushinteger(L, -i);
   return str_sub(L);
 }
