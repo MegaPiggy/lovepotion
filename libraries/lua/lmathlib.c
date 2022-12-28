@@ -69,13 +69,13 @@
 #define RADIANS_PER_DEGREE (PI / 180.0)
 
 #undef TAU
-#define TAU (PI * 2)
+#define TAU (PI * 2) // 6.283185307179586476925286766559
 
 #undef ETA
-#define ETA (PI / 2)
+#define ETA (PI / 2) // 1.57079632679489661923
 
 #undef PIOVER4
-#define PIOVER4 (PI / 4)
+#define PIOVER4 (PI / 4) // 0.785398163397448309616
 
 
 static int math_abs (lua_State *L) {
