@@ -77,6 +77,15 @@
 #undef PIOVER4
 #define PIOVER4 (PI / 4) // 0.785398163397448309616
 
+#undef ONEOVERPI
+#define ONEOVERPI (1 / PI) // 0.318309886183790671538
+
+#undef TWOOVERPI
+#define TWOOVERPI (2 / PI) // 0.636619772367581343076
+
+#undef TWOOVERSQRTPI
+#define TWOOVERSQRTPI (2 / sqrt(PI)) // 1.12837916709551257390
+
 
 static int math_abs (lua_State *L) {
   lua_pushnumber(L, fabs(luaL_checknumber(L, 1)));
@@ -1503,6 +1512,14 @@ LUALIB_API int luaopen_math (lua_State *L) {
   lua_setfield(L, -2, "tau");
   lua_pushnumber(L, ETA);
   lua_setfield(L, -2, "eta");
+  lua_pushnumber(L, PIOVER4);
+  lua_setfield(L, -2, "piover4");
+  lua_pushnumber(L, ONEOVERPI);
+  lua_setfield(L, -2, "oneoverpi");
+  lua_pushnumber(L, TWOOVERPI);
+  lua_setfield(L, -2, "twooverpi");
+  lua_pushnumber(L, TWOOVERSQRTPI);
+  lua_setfield(L, -2, "twooversqrtpi");
   lua_pushnumber(L, HUGE_VAL);
   lua_setfield(L, -2, "huge");
   lua_pushnumber(L, EULER);
