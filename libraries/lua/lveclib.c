@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdbool.h>
+#include <math.h>
 
 #define lveclib_c
 #define LUA_LIB
