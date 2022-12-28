@@ -27,7 +27,8 @@
 		"lua.h": "c",
 		"stdarg.h": "c",
 		"limits.h": "c",
-		"sstream": "c"
+		"sstream": "c",
+		"fastmath.h": "c"
 	},
 	"Lua.runtime.version": "LuaJIT",
 	"Lua.workspace.library": [
