@@ -88,6 +88,7 @@ typedef struct lua_TValue {
 #define ttisthread(o)	(ttype(o) == LUA_TTHREAD)
 #define ttislightuserdata(o)	(ttype(o) == LUA_TLIGHTUSERDATA)
 #define ttisvector(o)	(ttype(o) == LUA_TVECTOR)
+#define ttisupval(o) (ttype(o) == LUA_TUPVAL)
 
 /* Macros to access values */
 #define ttype(o)	((o)->tt)
@@ -103,6 +104,7 @@ typedef struct lua_TValue {
 #define hvalue(o)	check_exp(ttistable(o), &(o)->value.gc->h)
 #define bvalue(o)	check_exp(ttisboolean(o), (o)->value.b)
 #define thvalue(o)	check_exp(ttisthread(o), &(o)->value.gc->th)
+#define upvalue(o) check_exp(ttisupval(o), &(o)->value.gc->uv)
 
 #define l_isfalse(o)	(ttisnil(o) || (ttisboolean(o) && bvalue(o) == 0))
 
@@ -165,6 +167,11 @@ typedef struct lua_TValue {
 #define setptvalue(L,obj,x) \
   { TValue *i_o=(obj); \
     i_o->value.gc=cast(GCObject *, (x)); i_o->tt=LUA_TPROTO; \
+    checkliveness(G(L),i_o); }
+
+#define setupvalue(L, obj, x) \
+  { TValue *i_o=(obj); \
+    i_o->value.gc=cast(GCObject *, (x)); i_o->tt=LUA_TUPVAL; \
     checkliveness(G(L),i_o); }
 
 
