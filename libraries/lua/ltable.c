@@ -73,8 +73,8 @@
 #define dummynode		(&dummynode_)
 
 static const Node dummynode_ = {
-  {{NULL}, {0}, LUA_TNIL},  /* value */
-  {{{NULL}, {0}, LUA_TNIL, NULL}}  /* key */
+  {{NULL}, LUA_TNIL, {0}},  /* value */
+  {{{NULL}, LUA_TNIL, {0}, NULL}}  /* key */
 };
 
 
