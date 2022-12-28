@@ -52,6 +52,12 @@
 #undef LOG2E
 #define LOG2E (1.442695f)
 
+#undef LN10
+#define LN10 (2.30258509299404568402)
+
+#undef LN2
+#define LN2 (0.693147180559945309417) 
+
 #undef SQRT_FIVE
 #define SQRT_FIVE sqrt(5)
 
@@ -1505,6 +1511,10 @@ LUALIB_API int luaopen_math (lua_State *L) {
   lua_setfield(L, -2, "log10e");
   lua_pushnumber(L, LOG2E);
   lua_setfield(L, -2, "log2e");
+  lua_pushnumber(L, LN10);
+  lua_setfield(L, -2, "ln10");
+  lua_pushnumber(L, LN2);
+  lua_setfield(L, -2, "ln2");
   lua_pushnumber(L, EPSILON);
   lua_setfield(L, -2, "epsilon");
   lua_pushnumber(L, EPSILONF);
