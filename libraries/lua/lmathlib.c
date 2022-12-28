@@ -112,6 +112,11 @@ static int math_asin (lua_State *L) {
   return 1;
 }
 
+static int math_asinh (lua_State *L) {
+  lua_pushnumber(L, asinh(luaL_checknumber(L, 1)));
+  return 1;
+}
+
 static int math_acos (lua_State *L) {
   lua_pushnumber(L, acos(luaL_checknumber(L, 1)));
   return 1;
@@ -1346,6 +1351,7 @@ static const luaL_Reg mathlib[] = {
   {"acos",  math_acos},
   {"approach",  math_approach},
   {"asin",  math_asin},
+  {"asinh",  math_asinh},
   {"atan2", math_atan2},
   {"atan",  math_atan},
   {"amicable", math_amicable},
