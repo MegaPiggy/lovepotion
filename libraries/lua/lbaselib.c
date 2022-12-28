@@ -413,10 +413,25 @@ static int luaB_tostring (lua_State *L) {
     case LUA_TVECTOR:
     {
         lua_Vector v = lua_tovector(L, 1);
+#if LUA_VECTOR_FSTRING
 #if LUA_VECTOR_SIZE == 4
         lua_pushfstring(L, LUA_NUMBER_FMT ", " LUA_NUMBER_FMT ", " LUA_NUMBER_FMT ", " LUA_NUMBER_FMT, v[0], v[1], v[2], v[3]);
 #else
         lua_pushfstring(L, LUA_NUMBER_FMT ", " LUA_NUMBER_FMT ", " LUA_NUMBER_FMT, v[0], v[1], v[2]);
+#endif
+#else
+        char s[LUAI_MAXNUMBER2STR * LUA_VECTOR_SIZE];
+        char* e = s;
+        for (int i = 0; i < LUA_VECTOR_SIZE; ++i)
+        {
+            if (i != 0)
+            {
+                *e++ = ',';
+                *e++ = ' ';
+            }
+            e = lua_number2str(e, v[i]);
+        }
+        lua_pushlstring(L, s, e - s);
 #endif
         break;
     }

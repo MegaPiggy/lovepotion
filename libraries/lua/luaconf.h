@@ -148,6 +148,8 @@
 
 #define LUA_EXTRA_SIZE (LUA_VECTOR_SIZE - 2)
 
+#define LUA_VECTOR_FSTRING false // true or false. Determines whether tostring will use fstring or not.
+
 
 /*
 @@ LUA_INTEGER is the integral type used by lua_pushinteger/lua_tointeger.
