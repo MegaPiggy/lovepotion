@@ -616,6 +616,18 @@ static int math_fdim(lua_State* L)
   return 1;
 }
 
+static int math_fmax(lua_State* L)
+{
+  lua_pushnumber(L, fmax(luaL_checknumber(L, 1), luaL_checknumber(L, 2)));
+  return 1;
+}
+
+static int math_fmin(lua_State* L)
+{
+  lua_pushnumber(L, fmin(luaL_checknumber(L, 1), luaL_checknumber(L, 2)));
+  return 1;
+}
+
 static int math_fma(lua_State* L)
 {
   lua_pushnumber(L, fma(luaL_checknumber(L, 1), luaL_checknumber(L, 2), luaL_checknumber(L, 3)));
@@ -1383,6 +1395,8 @@ static const luaL_Reg mathlib[] = {
   {"fact", math_fact},
   {"floor", math_floor},
   {"fma",  math_fma},
+  {"fmax",  math_fmax},
+  {"fmin",  math_fmin},
   {"fmod",   math_fmod},
   {"fuzzyeq", math_fuzzyEq},
   {"fuzzyge", math_fuzzyGe},
