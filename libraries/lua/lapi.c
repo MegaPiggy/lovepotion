@@ -1347,8 +1347,13 @@ LUA_API void lua_dumpstack(lua_State* L)
             printf("%g", lua_tonumber(L, i));
             break;
     
-          case LUA_TVECTOR:  /* vector */
-            printf("%g", lua_tovector(L, i));
+          case LUA_TVECTOR:  /* vectors */
+            lua_Vector v = lua_tovector(L, i);
+#if LUA_VECTOR_SIZE == 4
+            printf("(%g, %g, %g, %g)", v[0], v[1], v[2], v[3]);
+#else
+            printf("(%g, %g, %g)", v[0], v[1], v[2]);
+#endif
             break;
     
           default:  /* other values */
