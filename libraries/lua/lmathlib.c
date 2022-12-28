@@ -586,6 +586,12 @@ static int math_round(lua_State* L)
   return 1;
 }
 
+static int math_rint(lua_State* L)
+{
+  lua_pushnumber(L, rint(luaL_checknumber(L, 1)));
+  return 1;
+}
+
 static int math_scalbn(lua_State* L)
 {
   lua_pushnumber(L, scalbn(luaL_checknumber(L, 1), luaL_checkinteger(L, 2)));
@@ -1475,6 +1481,7 @@ static const luaL_Reg mathlib[] = {
   {"sign", math_sign},
   {"signbit", math_signbit},
   {"round", math_round},
+  {"rint", math_rint},
   {NULL, NULL}
 };
 
