@@ -711,7 +711,7 @@ LUA_API void lua_rawgetfield(lua_State* L, int idx, const char* k)
   t = index2addr(L, idx);
   api_check(L, ttistable(t));
   setsvalue(L, &key, luaS_new(L, k));
-  setobj2s(L, L->top, luaH_getstr(hvalue(t), tsvalue(&key)));
+  setobj2s(L, L->top, luaH_getstr(hvalue(t), rawtsvalue(&key)));
   api_incr_top(L);
   lua_unlock(L);
 }
