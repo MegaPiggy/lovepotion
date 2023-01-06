@@ -87,6 +87,10 @@ namespace love::common
         static bool GetConstant(const char* in, NetworkState& out);
         static bool GetConstant(NetworkState in, const char*& out);
 
+        static bool GetConstant(const char* in, FS_MediaType& out);
+        static bool GetConstant(FS_MediaType in, const char*& out);
+        static std::vector<const char*> GetConstants(FS_MediaType);
+
       protected:
         struct
         {

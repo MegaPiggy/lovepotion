@@ -232,6 +232,16 @@ void System::SetPlayCoins(int amount)
     FSFILE_Close(playCoinsFile);
 }
 
+void System::Chainload(u64 programID, FS_MediaType mediatype)
+{
+    aptSetChainloader(programID, mediatype);
+}
+
+void System::ChainloadSelf()
+{
+    aptSetChainloaderToSelf();
+}
+
 // clang-format off
 constexpr auto languages = BidirectionalMap<>::Create(
     "jp",    CFG_LANGUAGE_JP,

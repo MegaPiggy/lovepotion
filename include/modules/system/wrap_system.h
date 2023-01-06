@@ -29,5 +29,9 @@ namespace Wrap_System
 
     int SetPlayCoins(lua_State* L);
 
+    int Chainload(lua_State* L);
+
+    int ChainloadSelf(lua_State* L);
+
     int Register(lua_State* L);
 } // namespace Wrap_System

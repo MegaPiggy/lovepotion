@@ -143,6 +143,26 @@ int Wrap_System::GetPlayCoins(lua_State* L)
 
     return 1;
 }
+
+int Wrap_System::Chainload(lua_State* L)
+{
+    char *eptr;
+    u64 programID = strtoll(luaL_checkstring(L, 1), &eptr, 16);
+
+    const char* mediatypestr = luaL_checkstring(L, 2);
+    FS_MediaType mediatype = FS_MediaType::MEDIATYPE_NAND;
+    if (!common::System::GetConstant(mediatypestr, mediatype))
+        Luax::EnumError(L, "media type", common::System::GetConstants(mediatype), mediatypestr);
+
+    Luax::CatchException(L, [&]() { instance()->Chainload(programID, mediatype); });
+    return 0;
+}
+
+int Wrap_System::ChainloadSelf(lua_State* L)
+{
+    Luax::CatchException(L, [&]() { instance()->ChainloadSelf(); });
+    return 0;
+}
 #endif
 
 // clang-format off
@@ -162,6 +182,8 @@ static constexpr luaL_Reg functions[] =
 #if defined(__3DS__)
     { "getPlayCoins",        Wrap_System::GetPlayCoins        },
     { "setPlayCoins",        Wrap_System::SetPlayCoins        },
+    { "chainload",           Wrap_System::Chainload           },
+    { "chainloadSelf",       Wrap_System::ChainloadSelf       },
 #endif
     { 0,                     0                                }
 };

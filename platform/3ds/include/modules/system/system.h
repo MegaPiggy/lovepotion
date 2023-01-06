@@ -39,6 +39,10 @@ namespace love
 
         void SetPlayCoins(int);
 
+        void Chainload(u64 programID, FS_MediaType mediatype);
+
+        void ChainloadSelf();
+
         /* constants */
 
         static constexpr uint8_t MAX_MODELS    = 6;
