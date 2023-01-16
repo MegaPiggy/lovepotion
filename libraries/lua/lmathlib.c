@@ -1379,6 +1379,15 @@ static int math_approach(lua_State* L)
     return 1;
 }
 
+static int math_maybe(lua_State* L)
+{
+  /* the `%' avoids the (rare) case of r==1, and is needed also because on
+     some systems (SunOS!) `rand()' may return a value larger than RAND_MAX */
+  lua_Number r = (lua_Number)(rand()%RAND_MAX) / (lua_Number)RAND_MAX;
+  lua_pushboolean(L, r<0.5);
+  return 1;
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
@@ -1457,6 +1466,7 @@ static const luaL_Reg mathlib[] = {
   {"log2",  math_log2},
   {"mantissa", math_mantissa},
   {"max",   math_max},
+  {"maybe",   math_maybe},
   {"mean", math_mean},
   {"min",   math_min},
   {"modf",   math_modf},
