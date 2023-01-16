@@ -232,7 +232,7 @@ void System::SetPlayCoins(int amount)
     FSFILE_Close(playCoinsFile);
 }
 
-void System::Chainload(u64 programID, FS_MediaType mediatype)
+void System::Chainload(u64 programID, MediaType mediatype)
 {
     aptSetChainloader(programID, mediatype);
 }

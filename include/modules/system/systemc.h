@@ -2,6 +2,8 @@
 
 #include "common/module.h"
 
+#include <vector>
+
 using namespace std::literals::string_literals;
 
 #define OS_NAME "Horizon"
@@ -39,6 +41,13 @@ namespace love::common
             THEME_LIGHT,
             THEME_DARK,
             THEME_MAX_ENUM
+        };
+
+        enum MediaType
+        {
+            MEDIATYPE_NAND      = 0, ///< NAND.
+            MEDIATYPE_SD        = 1, ///< SD card.
+            MEDIATYPE_GAME_CARD = 2, ///< Game card.
         };
 
         System();
@@ -89,9 +98,9 @@ namespace love::common
         static bool GetConstant(const char* in, NetworkState& out);
         static bool GetConstant(NetworkState in, const char*& out);
 
-        static bool GetConstant(const char* in, FS_MediaType& out);
-        static bool GetConstant(FS_MediaType in, const char*& out);
-        static std::vector<const char*> GetConstants(FS_MediaType);
+        static bool GetConstant(const char* in, MediaType& out);
+        static bool GetConstant(MediaType in, const char*& out);
+        static std::vector<const char*> GetConstants(MediaType);
 
       protected:
         struct

@@ -39,7 +39,7 @@ namespace love
 
         void SetPlayCoins(int);
 
-        void Chainload(u64 programID, FS_MediaType mediatype);
+        void Chainload(u64 programID, MediaType mediatype);
 
         void ChainloadSelf();
 

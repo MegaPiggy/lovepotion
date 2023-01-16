@@ -27,9 +27,9 @@ constexpr auto networkStates = BidirectionalMap<>::Create(
 );
 
 constexpr auto mediaTypes = BidirectionalMap<>::Create(
-    "nand",     FS_MediaType::MEDIATYPE_NAND,
-    "sd",       FS_MediaType::MEDIATYPE_SD,
-    "gamecard", FS_MediaType::MEDIATYPE_GAME_CARD
+    "nand",     System::MediaType::MEDIATYPE_NAND,
+    "sd",       System::MediaType::MEDIATYPE_SD,
+    "gamecard", System::MediaType::MEDIATYPE_GAME_CARD
 );
 // clang-format on
 
@@ -53,17 +53,17 @@ bool System::GetConstant(System::NetworkState in, const char*& out)
     return networkStates.ReverseFind(in, out);
 }
 
-bool System::GetConstant(const char* in, FS_MediaType& out)
+bool System::GetConstant(const char* in, System::MediaType& out)
 {
     return mediaTypes.Find(in, out);
 }
 
-bool System::GetConstant(FS_MediaType in, const char*& out)
+bool System::GetConstant(System::MediaType in, const char*& out)
 {
     return mediaTypes.ReverseFind(in, out);
 }
 
-std::vector<const char*> System::GetConstants(FS_MediaType)
+std::vector<const char*> System::GetConstants(System::MediaType)
 {
     return mediaTypes.GetNames();
 }

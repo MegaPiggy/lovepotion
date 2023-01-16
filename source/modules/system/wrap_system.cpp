@@ -150,7 +150,7 @@ int Wrap_System::Chainload(lua_State* L)
     u64 programID = strtoll(luaL_checkstring(L, 1), &eptr, 16);
 
     const char* mediatypestr = luaL_checkstring(L, 2);
-    FS_MediaType mediatype = FS_MediaType::MEDIATYPE_NAND;
+    System::MediaType mediatype = System::MediaType::MEDIATYPE_NAND;
     if (!common::System::GetConstant(mediatypestr, mediatype))
         Luax::EnumError(L, "media type", common::System::GetConstants(mediatype), mediatypestr);
 
