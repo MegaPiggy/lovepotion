@@ -206,7 +206,7 @@ static int math_root(lua_State* L)
 
 static int math_approximately(lua_State* L)
 {
-	lua_pushboolean(L, (fabs(luaL_checknumber(L, 1) - luaL_checknumber(L, 2)) < FUZZY_EPSILONF));
+  lua_pushboolean(L, (fabs(luaL_checknumber(L, 1) - luaL_checknumber(L, 2)) < FUZZY_EPSILONF));
   return 1;
 }
 
@@ -801,7 +801,7 @@ static int math_rep(lua_State* L)
 
 static double eps(double a, double b, double e)
 {
-	double aa = fabs(a) + 1;
+  double aa = fabs(a) + 1;
   if (isinf(aa))
       return e;
   else
@@ -1335,9 +1335,9 @@ static int math_dist(lua_State* L)
     lua_Number y1 = luaL_checknumber(L, 2);
     lua_Number x2 = luaL_checknumber(L, 3);
     lua_Number y2 = luaL_checknumber(L, 4);
-	  lua_Number xd = x2 - x1;
-	  lua_Number yd = y2 - y1;
-	
+    lua_Number xd = x2 - x1;
+    lua_Number yd = y2 - y1;
+  
     lua_pushnumber(L, sqrt(xd * xd + yd * yd));
     return 1;
 }
@@ -1358,8 +1358,8 @@ static int math_inrange(lua_State* L)
 }
 
 static lua_Number clamp (lua_Number var, lua_Number min, lua_Number max){
-	if (var < min) return min;
-	if (var > max) return max;
+  if (var < min) return min;
+  if (var > max) return max;
   return var;
 }
 
