@@ -42,6 +42,9 @@ LUALIB_API int (luaopen_package) (lua_State *L);
 #define LUA_VECTORLIBNAME	"vector"
 LUALIB_API int (luaopen_vector) (lua_State *L);
 
+#define LUA_TIMELIBNAME	"time"
+LUALIB_API int (luaopen_time) (lua_State *L);
+
 #define LUA_HOOKLIBNAME	"hook"
 LUALIB_API int (luaopen_hook) (lua_State *L);
 

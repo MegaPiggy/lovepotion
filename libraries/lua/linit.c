@@ -24,6 +24,7 @@ static const luaL_Reg lualibs[] = {
   {LUA_MATHLIBNAME, luaopen_math},
   {LUA_DBLIBNAME, luaopen_debug},
   {LUA_VECTORLIBNAME, luaopen_vector},
+  {LUA_TIMELIBNAME, luaopen_time},
   {LUA_HOOKLIBNAME, luaopen_hook},
   {LUA_COLORLIBNAME, luaopen_color},
   {NULL, NULL}
@@ -38,4 +39,3 @@ LUALIB_API void luaL_openlibs (lua_State *L) {
     lua_call(L, 1, 0);
   }
 }
-

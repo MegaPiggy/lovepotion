@@ -27,7 +27,7 @@ CORE_O=	lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
 	lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o  \
 	lundump.o lvm.o lzio.o
 LIB_O=	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o loslib.o ltablib.o \
-	lstrlib.o loadlib.o linit.o lhooklib.o lveclib.o lcolorlib.o
+	lstrlib.o loadlib.o linit.o lhooklib.o lveclib.o lcolorlib.o ltimelib.o
 
 LUA_T=	lua
 LUA_O=	lua.o
@@ -163,6 +163,7 @@ ltable.o: ltable.c lua.h luaconf.h ldebug.h lstate.h lobject.h llimits.h \
   ltm.h lzio.h lmem.h ldo.h lgc.h ltable.h
 ltablib.o: ltablib.c lua.h luaconf.h lauxlib.h lualib.h lobject.h \
  lstring.h ltable.h
+ltimelib.o: ltimelib.c lua.h luaconf.h lauxlib.h lualib.h
 ltm.o: ltm.c lua.h luaconf.h lobject.h llimits.h lstate.h ltm.h lzio.h \
   lmem.h lstring.h lgc.h ltable.h
 lua.o: lua.c lua.h luaconf.h lauxlib.h lualib.h
