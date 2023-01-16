@@ -242,6 +242,46 @@ void System::ChainloadSelf()
     aptSetChainloaderToSelf();
 }
 
+bool System::ScanAmiibo(const char*& uid)
+{
+	nfcInit(NFC_OpType_NFCTag);
+
+	//Start scanning for NFC tags
+	nfcStartScanning(NFC_STARTSCAN_DEFAULTINPUT);
+
+	NFC_TagInfo nfcTag;
+	NFC_TagState nfcState;
+	NFC_AmiiboSettings amiibosettings;
+	NFC_AmiiboConfig amiiboconfig;
+	bool scanned = false;
+
+	nfcGetTagState(&nfcState);
+    
+	if (nfcState == NFC_TagState_InRange && !R_FAILED(nfcGetTagInfo(&nfcTag))){
+	    char uidstr[0x28];
+		for(u32 pos=0; pos<7; pos++) snprintf(&uidstr[pos*2], 3, "%02x", nfcTag.id[pos]);
+        uid = uidstr;
+		scanned = true;
+        if(!R_FAILED(nfcLoadAmiiboData())) {
+            Result ret = nfcGetAmiiboSettings(&amiibosettings);
+            if(!R_FAILED(ret)) {
+                if (!R_FAILED(nfcGetAmiiboConfig(&amiiboconfig))) {
+                    
+                }
+            }
+            else if (ret==NFC_ERR_AMIIBO_NOTSETUP) {
+                nfcStopScanning();
+                nfcExit();
+                throw love::Exception("This amiibo wasn't setup by the amiibo Settings applet.");
+            }
+        }
+	}
+
+	nfcStopScanning();
+	nfcExit();
+    return scanned;
+}
+
 // clang-format off
 constexpr auto languages = BidirectionalMap<>::Create(
     "jp",    CFG_LANGUAGE_JP,

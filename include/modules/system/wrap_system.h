@@ -33,5 +33,7 @@ namespace Wrap_System
 
     int ChainloadSelf(lua_State* L);
 
+    int ScanAmiibo(lua_State* L);
+
     int Register(lua_State* L);
 } // namespace Wrap_System

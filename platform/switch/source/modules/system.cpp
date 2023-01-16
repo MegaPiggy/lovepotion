@@ -182,6 +182,11 @@ const std::string& System::GetSystemTheme()
     return this->systemInfo.colorTheme;
 }
 
+bool System::ScanAmiibo(const char*& uid)
+{
+    return false;
+}
+
 // clang-format off
 constexpr auto languages = BidirectionalMap<>::Create(
     "jp",      SetLanguage_JA,

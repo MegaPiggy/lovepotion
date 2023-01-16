@@ -165,6 +165,23 @@ int Wrap_System::ChainloadSelf(lua_State* L)
 }
 #endif
 
+int Wrap_System::ScanAmiibo(lua_State* L)
+{
+    bool scanned = false;
+    const char* uid = nullptr;
+
+    Luax::CatchException(L, [&]() { scanned = instance()->ScanAmiibo(uid); });
+
+    Luax::PushBoolean(L, scanned);
+
+    if (scanned){
+        Luax::PushString(L, uid);
+        return 2;
+    }
+    else
+        return 1;
+}
+
 // clang-format off
 static constexpr luaL_Reg functions[] =
 {
@@ -185,6 +202,7 @@ static constexpr luaL_Reg functions[] =
     { "chainload",           Wrap_System::Chainload           },
     { "chainloadSelf",       Wrap_System::ChainloadSelf       },
 #endif
+    { "scanAmiibo",          Wrap_System::ScanAmiibo          },
     { 0,                     0                                }
 };
 // clang-format on

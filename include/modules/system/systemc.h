@@ -79,6 +79,8 @@ namespace love::common
 
         virtual const std::string& GetFriendCode() = 0;
 
+        virtual bool ScanAmiibo(const char*& uid) = 0;
+
         /* end pure virtual methods */
 
         static bool GetConstant(const char* in, PowerState& out);

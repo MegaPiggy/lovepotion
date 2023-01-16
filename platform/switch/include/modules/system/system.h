@@ -39,6 +39,8 @@ namespace love
 
         const std::string& GetFriendCode() override;
 
+        bool ScanAmiibo(const char*& uid) override;
+
         static constexpr uint8_t MAX_REGIONS = 6;
         static constexpr uint8_t MAX_THEMES  = 2;
         static constexpr uint8_t MAX_MODELS  = 7;

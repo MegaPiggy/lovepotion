@@ -43,6 +43,8 @@ namespace love
 
         void ChainloadSelf();
 
+        bool ScanAmiibo(const char*& uid) override;
+
         /* constants */
 
         static constexpr uint8_t MAX_MODELS    = 6;
