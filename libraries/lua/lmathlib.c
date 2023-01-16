@@ -1388,6 +1388,15 @@ static int math_maybe(lua_State* L)
   return 1;
 }
 
+static int math_appr(lua_State* L) {
+  lua_Number val = luaL_checknumber(L, 1);
+  lua_Number target = luaL_checknumber(L, 2);
+  lua_Number amount = luaL_checknumber(L, 3);
+  return val > target 
+    ? fmax(val - amount, target) 
+    : fmin(val + amount, target);
+}
+
 static const luaL_Reg mathlib[] = {
   {"abs",   math_abs},
   {"acos",  math_acos},
